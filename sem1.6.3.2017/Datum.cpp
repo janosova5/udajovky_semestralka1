@@ -133,7 +133,7 @@ bool Datum::jeDatumZajtra(string paDatum)
 
 	time_t now;
 	tm nowLocal;
-
+	//
 	now = time(NULL);
 	nowLocal = *localtime(&now);
 	// mesiace +1 roky + 1900 testik
