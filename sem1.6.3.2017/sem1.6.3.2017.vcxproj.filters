@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\DS">
+      <UniqueIdentifier>{10322696-29cf-42b0-b3d2-7bd7c481a755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DS">
+      <UniqueIdentifier>{302682f3-b2d9-45ca-b18f-00aae43fad4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Ostatne">
+      <UniqueIdentifier>{2cb4f3b8-37ea-40b9-98e2-e5843e274aa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Ostatne">
+      <UniqueIdentifier>{dfe84497-e06e-43e9-9fe1-032a508f4216}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Dodavatel.h">
+      <Filter>Header Files\Ostatne</Filter>
+    </ClInclude>
+    <ClInclude Include="Paleta.h">
+      <Filter>Header Files\Ostatne</Filter>
+    </ClInclude>
+    <ClInclude Include="Vozidlo.h">
+      <Filter>Header Files\Ostatne</Filter>
+    </ClInclude>
+    <ClInclude Include="Datum.h">
+      <Filter>Header Files\Ostatne</Filter>
+    </ClInclude>
+    <ClInclude Include="Firma.h">
+      <Filter>Header Files\Ostatne</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="DSRoutines.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="StructureID.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="StructureItem.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="Array.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrayList.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="List.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="Iterator.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue_Heap.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue_List.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue_ArrayList.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="Kamion.h">
+      <Filter>Header Files\Ostatne</Filter>
+    </ClInclude>
+    <ClInclude Include="Zasielka.h">
+      <Filter>Header Files\Ostatne</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedList.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="Stack.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplicitStack.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+    <ClInclude Include="Queue.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Dodavatel.cpp">
+      <Filter>Source Files\Ostatne</Filter>
+    </ClCompile>
+    <ClCompile Include="Vozidlo.cpp">
+      <Filter>Source Files\Ostatne</Filter>
+    </ClCompile>
+    <ClCompile Include="Paleta.cpp">
+      <Filter>Source Files\Ostatne</Filter>
+    </ClCompile>
+    <ClCompile Include="Datum.cpp">
+      <Filter>Source Files\Ostatne</Filter>
+    </ClCompile>
+    <ClCompile Include="Firma.cpp">
+      <Filter>Source Files\Ostatne</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>Source Files\DS</Filter>
+    </ClCompile>
+    <ClCompile Include="Structure.cpp">
+      <Filter>Source Files\DS</Filter>
+    </ClCompile>
+    <ClCompile Include="DSRoutines.cpp">
+      <Filter>Source Files\DS</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files\Ostatne</Filter>
+    </ClCompile>
+    <ClCompile Include="Kamion.cpp">
+      <Filter>Source Files\Ostatne</Filter>
+    </ClCompile>
+    <ClCompile Include="Zasielka.cpp">
+      <Filter>Source Files\Ostatne</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
