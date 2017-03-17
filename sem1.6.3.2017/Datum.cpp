@@ -136,7 +136,7 @@ bool Datum::jeDatumZajtra(string paDatum)
 
 	now = time(NULL);
 	nowLocal = *localtime(&now);
-	// mesiace +1 roky + 1900 
+	// mesiace +1 roky + 1900 testik
 	int dniTeras, mesiaceTeras, rokyTeras;
 	dniTeras = (int)nowLocal.tm_mday;
 	mesiaceTeras = (int)nowLocal.tm_mon;
