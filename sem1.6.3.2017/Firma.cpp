@@ -255,6 +255,7 @@ double Firma::vratMaxNosnost()
 
 void Firma::naplnenieVozidiel()
 {
+	//etst
 	/**int j = 0;
 	for (int i = 0; i < aMozuRozvazat->size(); i++) { //prejdi prior.front, cize na zaciatku bude vozidlo s najmensim opotrebenim
 		while (j < aSklad->size()) { //prejdi sklad
