@@ -6,7 +6,7 @@
 Firma::Firma()
 {
 	aEvidenciaVozidiel = new ArrayList<Vozidlo*>(5); 
-	aMozuRozvazat = new PriorityQueue_Heap<Vozidlo*>(); 
+	//aMozuRozvazat = new PriorityQueue_Heap<Vozidlo*>(); 
 	aVyradeneVozidla = new LinkedList<Vozidlo*>(); //zatial to dam ako linkedlist kym nezozeniem funkcne explicit queue
 	aSklad = new ArrayList<Zasielka*>(5);
 	aDodavatelia = new ArrayList<Dodavatel*>(5); 
@@ -20,8 +20,8 @@ Firma::~Firma() // ?????
 	//TODO aafasfas
 	aEvidenciaVozidiel->clear();
 	delete aEvidenciaVozidiel;
-	aMozuRozvazat->clear();
-	delete aMozuRozvazat;
+	//aMozuRozvazat->clear();
+	//delete aMozuRozvazat;
 	aVyradeneVozidla->clear();
 	delete aVyradeneVozidla;
 	aSklad->clear();
@@ -47,7 +47,7 @@ bool Firma::pridajNoveVozidlo(Vozidlo* vozidlo) //tuto budem pridavat aj do evid
 	}
 	if (pom == false) {
 		if (aEvidenciaVozidiel->size() == 0) {
-			aMozuRozvazat->push(0, vozidlo);
+			//aMozuRozvazat->push(0, vozidlo);
 			aEvidenciaVozidiel->add(vozidlo);
 		}
 		else { //compare porovna lexikograficky 2 retazce
@@ -56,7 +56,7 @@ bool Firma::pridajNoveVozidlo(Vozidlo* vozidlo) //tuto budem pridavat aj do evid
 				i++;
 			}
 			aEvidenciaVozidiel->insert(vozidlo, i);
-			aMozuRozvazat->push(0, vozidlo);
+			//aMozuRozvazat->push(0, vozidlo);
 			//cout << i; 
 		}
 		return true;
@@ -112,9 +112,9 @@ void Firma::vypisDodavatelov()
 
 void Firma::otestujPrioritnyFront(int o)
 {
-	Vozidlo *pom = aMozuRozvazat->pop();
-	pom->zvysOpotrebovanie(o);
-	aMozuRozvazat->push(pom->getOpotrebovanie(), pom);
+	//Vozidlo *pom = aMozuRozvazat->pop();
+	//pom->zvysOpotrebovanie(o);
+	//aMozuRozvazat->push(pom->getOpotrebovanie(), pom);
 }
 void Firma::otestujPrioritnyFront1()
 {
@@ -130,12 +130,12 @@ void Firma::otestujPrioritnyFront1()
 
 void Firma::vypis() //IBA NA OTESTOVANIE PRIOR.FRONTU!
 {
-	int pocet = aMozuRozvazat->size();
-	for (int i = 0; i < pocet; i++) //tu si treba davat pozor pri vypisovani lebo ked popnem tak zaroven sa velkost frontu znizi o 1 a nevypise
+	//int pocet = aMozuRozvazat->size();
+	//for (int i = 0; i < pocet; i++) //tu si treba davat pozor pri vypisovani lebo ked popnem tak zaroven sa velkost frontu znizi o 1 a nevypise
 		//vsetky, budem ich popovat a zaroven pridavat do arraylistu, ktory zoradim podla datumu a tak ich vypisem
-	{
-		cout << aMozuRozvazat->peek(i)->getOpotrebovanie() << endl;
-	}
+	//{
+		//cout << aMozuRozvazat->peek(i)->getOpotrebovanie() << endl;
+	//}
 	
 }
 
@@ -255,7 +255,7 @@ double Firma::vratMaxNosnost()
 
 void Firma::naplnenieVozidiel()
 {
-	int j = 0;
+	/**int j = 0;
 	for (int i = 0; i < aMozuRozvazat->size(); i++) { //prejdi prior.front, cize na zaciatku bude vozidlo s najmensim opotrebenim
 		while (j < aSklad->size()) { //prejdi sklad
 			aMozuRozvazat->peek(i)->setRegion(aSklad->operator[](j)->getRegion());
@@ -299,4 +299,6 @@ void Firma::naplnenieVozidiel()
 			}
 		}
 	}
+	*/
+
 }

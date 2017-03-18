@@ -26,9 +26,9 @@ int main() {
 	cout << "max nosnost: " << firma->vratMaxNosnost() << endl;
 	//firma->pridajNoveVozidlo();
 	//firma->pridajNoveVozidlo();
-	firma->otestujPrioritnyFront(10);
-	firma->otestujPrioritnyFront(15);
-	firma->vypis();
+	//firma->otestujPrioritnyFront(10);
+	//firma->otestujPrioritnyFront(15);
+	//firma->vypis();
 	firma->vypisVozidlaPodlaDatumu();
 	//firma->pridajNovehoDodavatela();
 	//firma->pridajNovehoDodavatela();

@@ -22,7 +22,7 @@ class Firma
 {
 private:
 	ArrayList<Vozidlo*> *aEvidenciaVozidiel; //tu iba budu uchovane vsetky vozidla, ktore ma firma k dispo
-	PriorityQueue_Heap<Vozidlo*> *aMozuRozvazat; //sem budem davat vozidla, ked s nimi budem pracovat a vyberat ich podla opotrebovanosti
+	//PriorityQueue_Heap<Vozidlo*> *aMozuRozvazat; //sem budem davat vozidla, ked s nimi budem pracovat a vyberat ich podla opotrebovanosti
 	LinkedList<Vozidlo*> *aVyradeneVozidla; //kedm i pojde explicit queue dam ten
 	ArrayList<Zasielka*> *aSklad;
 	ArrayList<Dodavatel*> *aDodavatelia; //toto bude arraylist
