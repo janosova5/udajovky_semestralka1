@@ -7,7 +7,7 @@ Paleta::Paleta()
 {
 }
 
-Paleta::Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, Dodavatel *paDodavatel)
+Paleta::Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, string paDatum, Dodavatel *paDodavatel)
 {
 	aRegion = paRegion;
 	aHmotnost = paHmotnost;
@@ -18,10 +18,9 @@ Paleta::Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, Dodavatel *p
 	aDatumVratenia = "";
 	aDatumPrichodu = "";
 	aDodavatel = paDodavatel;
+	aNalozena = false;
 	if (aPrvejTriedy) {
-		Datum *dnes = new Datum();
-		aDatumDorucenia = dnes->getDnesnyDatum();
-		delete dnes;
+		aDatumDorucenia = paDatum;
 	}
 	else aDatumDorucenia = "00.00.0000"; //lubovolny datum dorucenia
 }
@@ -55,6 +54,11 @@ bool Paleta::jeZrealizovana()
 bool Paleta::jePrevzata()
 {
 	return aPrevzata;
+}
+
+bool Paleta::jeNalozena()
+{
+	return aNalozena;
 }
 
 string Paleta::getDatumDorucenia()
@@ -127,4 +131,9 @@ void Paleta::setDatumPrichodu(string paDatumPrichodu)
 void Paleta::setDodavatel(Dodavatel * paDodavatel)
 {
 	aDodavatel = paDodavatel;
+}
+
+void Paleta::setNalozena(bool nalozena)
+{
+	aNalozena = nalozena;
 }

@@ -15,6 +15,7 @@ private:
 	int aOpotrebovanie;
 	int aRegion;
 	string aDatumZaradenia;
+	double aKolkoJeNalozene;
 	ExplicitStack<Paleta*> *aPalety;
 
 public:
@@ -26,12 +27,18 @@ public:
 	int getOpotrebovanie() const;
 	int getRegion() const;
 	string getDatum() const;
+	ExplicitStack<Paleta*>* getPalety();
 	friend bool operator ==(Vozidlo a, Vozidlo b);
 	void setSPZ(string paSPZ);
 	void setNosnost(double paNosnost);
 	void zvysOpotrebovanie(int paRegion);
 	void setRegion(int paRegion);
-
+	bool pridajPaletu(Paleta *paleta);
+	bool mozemPridatPaletu(Paleta *paleta);
+	void vynulujKolkoJeNalozene();
+	void resetRegion();
+	double getNalozene();
+	void setNalozene(double hmotnost);
 };
 
 inline bool operator ==(Vozidlo a, Vozidlo b)

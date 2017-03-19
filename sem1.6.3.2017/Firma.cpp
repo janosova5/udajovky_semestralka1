@@ -6,7 +6,7 @@
 Firma::Firma()
 {
 	aEvidenciaVozidiel = new ArrayList<Vozidlo*>(5); 
-	//aMozuRozvazat = new PriorityQueue_Heap<Vozidlo*>(); 
+	aRozvazajuceVozidla = new ArrayList<Vozidlo*>(5); 
 	aVyradeneVozidla = new LinkedList<Vozidlo*>(); //zatial to dam ako linkedlist kym nezozeniem funkcne explicit queue
 	aSklad = new ArrayList<Zasielka*>(5);
 	aDodavatelia = new ArrayList<Dodavatel*>(5); 
@@ -20,8 +20,8 @@ Firma::~Firma() // ?????
 	//TODO aafasfas
 	aEvidenciaVozidiel->clear();
 	delete aEvidenciaVozidiel;
-	//aMozuRozvazat->clear();
-	//delete aMozuRozvazat;
+	aRozvazajuceVozidla->clear();
+	delete aRozvazajuceVozidla;
 	aVyradeneVozidla->clear();
 	delete aVyradeneVozidla;
 	aSklad->clear();
@@ -34,7 +34,8 @@ Firma::~Firma() // ?????
 	delete aNezrealizovane;
 }
 
-bool Firma::pridajNoveVozidlo(Vozidlo* vozidlo) //tuto budem pridavat aj do evidencie vozidiel kvoli metode 10
+bool Firma::pridajNoveVozidlo(Vozidlo* vozidlo) //pridaj nove vozidlo do evidencie vozidiel
+//zaroven sa prida aj do vozidiel, ktore mozu rozvazat
 {
 	Datum *datum = new Datum();
 	int i = 0;
@@ -47,6 +48,7 @@ bool Firma::pridajNoveVozidlo(Vozidlo* vozidlo) //tuto budem pridavat aj do evid
 	}
 	if (pom == false) {
 		if (aEvidenciaVozidiel->size() == 0) {
+			aRozvazajuceVozidla->add(vozidlo);
 			//aMozuRozvazat->push(0, vozidlo);
 			aEvidenciaVozidiel->add(vozidlo);
 		}
@@ -56,6 +58,7 @@ bool Firma::pridajNoveVozidlo(Vozidlo* vozidlo) //tuto budem pridavat aj do evid
 				i++;
 			}
 			aEvidenciaVozidiel->insert(vozidlo, i);
+			aRozvazajuceVozidla->add(vozidlo);
 			//aMozuRozvazat->push(0, vozidlo);
 			//cout << i; 
 		}
@@ -128,6 +131,29 @@ void Firma::otestujPrioritnyFront1()
 	delete skuska;
 }
 
+void Firma::skontrolujOpotrebovanie()
+{
+	for (Vozidlo* v : *aRozvazajuceVozidla) {
+		if (v->getOpotrebovanie() > 90) {
+			aVyradeneVozidla->add(v);
+			aRozvazajuceVozidla->tryRemove(v);
+		}
+	}
+}
+
+void Firma::vypisPaletyZVozidiel()
+{
+	for (Vozidlo* v : *aRozvazajuceVozidla) {
+		cout << v->getPalety()->size() << endl;
+		int pocet = v->getPalety()->size();
+		for (int i = 0; i < pocet; i++)
+		{
+			cout << v->getPalety()->pop()->getHmotnost() << endl;
+		}
+	}
+
+}
+
 void Firma::vypis() //IBA NA OTESTOVANIE PRIOR.FRONTU!
 {
 	//int pocet = aMozuRozvazat->size();
@@ -183,7 +209,7 @@ void Firma::vylozeniePalietDoSkladu(Kamion* K) //funguje
 		velkost = pom->size(); //velkost pomocneho pola
 		//cout << velkost << endl;
 		//ak paleta splna podmienky, prida sa do skladu, ak ich nesplna, do skladu sa neprida
-		if (K->getObsah()->operator[](i)->getHmotnost() <= vratMaxNosnost() && dnes->budePrvySkor(K->getObsah()->operator[](i)->getDatumDorucenia(),dnes->getDnesnyDatum())) {
+		if (K->getObsah()->operator[](i)->getHmotnost() <= vratMaxNosnost() && !(dnes->budePrvySkor(K->getObsah()->operator[](i)->getDatumDorucenia(),dnes->getDnesnyDatum())) || !(K->getObsah()->operator[](i)->jePrvejTriedy())) {
 			if (velkost == 0) {
 				Zasielka* zasielka = new Zasielka(K->getObsah()->operator[](i)->getRegion());
 				//do kontajnera paliet zasielky pridam zasielku, ktora splna dany region
@@ -236,7 +262,8 @@ void Firma::vypisSklad()
 	for (Zasielka *Z : *aSklad) {
 		cout << Z->getRegion();
 		cout << endl;
-		for (int i = 0; i < Z->getPalety()->size(); i++) {
+		int pocet = Z->getPalety()->size();
+		for (int i = 0; i < pocet; i++) {
 			cout << Z->getPalety()->operator[](i)->getRegion() << ", " << Z->getPalety()->operator[](i)->getHmotnost();
 			cout << endl;
 		}
@@ -261,31 +288,31 @@ void Firma::naplnenieVozidiel()
 		while (j < aSklad->size()) { //prejdi sklad
 			aMozuRozvazat->peek(i)->setRegion(aSklad->operator[](j)->getRegion());
 			j++;
-		
+
 		}
-	
-	
-	
+
+
+
 	}
 	//v metode, kde sa bude vozidlo vracat a znova pridavat do prior.frontu treba zavolat resetRegion a to nastavi region na 0
 	//ak mam zasielok viac ako vozidiel, je jasne, ze niektore zasielky neroznesiem, lebo jedno vozidlo ide len do jedneho regionu
 	//kedze jedna zasielka predstavuje jeden region
-	//ak ich mam teda viac, tak si ulozim do nejakej premennej kolku otocku idem a ak je to pocetZasielok 
+	//ak ich mam teda viac, tak si ulozim do nejakej premennej kolku otocku idem a ak je to pocetZasielok
 
 	//aby do kazdeho regionu islo nejake auto, ak je aut dostatok
 	//ak aut dostatok nie je, zasielky sa prerozdelia, tak ako "nasleduju za sebou"
 	//ak mi na konci zostanu volne kapacity v autach alebo volne auta, tak sa to prerozdeli podla regionov
 	//tymto sposobom aj zabranim tomu, aby jedno vozidlo malo viac regionov
 	for (Zasielka *Z : *aSklad) { //prejdi sklad, kazda zasielka prezentuje iny region
-		for (int i = 0 ; i < aMozuRozvazat->size(); i++) { //prejdi prioritny front 
+		for (int i = 0 ; i < aMozuRozvazat->size(); i++) { //prejdi prioritny front
 			//ak sa tam zmestia vsetky palety a nema este nastaveny region
 			if (Z->spocitajHmotnosti() <= aMozuRozvazat->peek(i)->getNosnost() && aMozuRozvazat->peek(i)->getRegion() == 0) {
 				aMozuRozvazat->peek(i)->setRegion(Z->getRegion()); //autu poviem, ze ides do regionu tejto zasielky
 
 			}
 			else if (Z->spocitajHmotnosti() > aMozuRozvazat->peek(i)->getNosnost() && aMozuRozvazat->peek(i)->getRegion() == 0) {
-				
-			
+
+
 			}
 		}
 	}
@@ -300,6 +327,107 @@ void Firma::naplnenieVozidiel()
 			}
 		}
 	}
-	*/
 
+	double celkovaNosnost = 0;
+	for (Vozidlo *v : *aEvidenciaVozidiel) {
+		if (v->getOpotrebovanie() <= 90) {
+			celkovaNosnost += v->getNosnost();
+		}
+	}
+	*/
+	//ak zasielok t.j regionov je viac ako vozidiel, hned je jasne, ze sa nemozu nalozit vsetky palety
+	//bool koniecCyklu = false;
+	bool mozuSaNalozit = true;
+	//aRozvazajuceVozidla->sortPodlaOpotrebovanosti();
+	if (aSklad->size() > aRozvazajuceVozidla->size()) mozuSaNalozit = false;
+	//inak skontroluj ci sa mozu nalozit vsetky
+	else {
+		for (Vozidlo* v : *aRozvazajuceVozidla) {
+			for (Zasielka* z : *aSklad) {
+				for (Paleta* p : *z->getPalety()) {
+					if (v->mozemPridatPaletu(p) == false) { //ked sa najde co i len jedna paleta, ktora sa neda nalozit
+						mozuSaNalozit = false;
+						//koniecCyklu = true;
+						break;
+					}
+				}
+				//if (koniecCyklu) break;
+			}
+			//if (koniecCyklu) break;
+		}
+	}
+	//ak sa mozu nalozit, naloz ich
+	if (mozuSaNalozit) {
+		for (Vozidlo* v : *aRozvazajuceVozidla) {
+			v->vynulujKolkoJeNalozene();
+			v->resetRegion();
+			for (Zasielka* z : *aSklad) {
+				for (Paleta* p : *z->getPalety()) {
+					v->pridajPaletu(p);
+					p->setNalozena(true);
+				}
+			}
+		}
+	}
+	//ak sa nemozu nalozit
+	else {
+		for(Vozidlo* v: *aRozvazajuceVozidla)
+		{
+			v->vynulujKolkoJeNalozene();
+			v->resetRegion();
+		}
+		ArrayList<Paleta*> *prvejTriedy = new ArrayList<Paleta*>(5);
+		ArrayList<Paleta*> *ostatne = new ArrayList<Paleta*>(5);
+		//roztriedenie
+		for (Zasielka* z : *aSklad) {
+			for (Paleta* p : *z->getPalety()) {
+				if (p->jePrvejTriedy()) prvejTriedy->add(p);
+				else ostatne->add(p);
+			}
+		}
+		//prvejTriedy->sortPodlaHmotnosti();
+		for (Vozidlo* v : *aRozvazajuceVozidla) {
+			for (Paleta* p : *prvejTriedy) {
+				if (!(p->jeNalozena())) {
+					if (v->getRegion() == 0) v->setRegion(p->getRegion());
+					if (p->getHmotnost() + v->getNalozene() <= v->getNosnost() && v->getRegion() == p->getRegion() && !(p->jeNalozena())) {
+						v->getPalety()->push(p); //pridaj paletu do stacku auta
+						p->setNalozena(true);
+						v->setNalozene(p->getHmotnost()); //zvysi nalozene o hmotnost palety
+						//PADA PROGRAM
+						//prvejTriedy->tryRemove(p); //vymaz ju z pomocneho pola, lebo dalej vsetky zasielky, kt. ostanu v tomto poli budu nezrealizovane
+
+					}
+				}
+			}
+		}
+		//oznacia sa ako nezrealizovane 
+		for (Paleta* p : *prvejTriedy) {
+			if(!(p->jeNalozena())) p->setZrealizovana(false);
+		}
+		//prejdem vsetky auta a ak nejake maju volne kapacity, nalozim zvysne palety
+		//ostatne->sortPodlaDatumu();
+		for (Vozidlo* v : *aRozvazajuceVozidla) {
+			for (Paleta* p : *ostatne) {
+				if (!(p->jeNalozena())) {
+					if (v->getRegion() == 0) v->setRegion(p->getRegion());
+					if (p->getHmotnost() + v->getNalozene() <= v->getNosnost() && v->getRegion() == p->getRegion() && !(p->jeNalozena())) {
+						v->getPalety()->push(p); //pridaj paletu do stacku auta
+						p->setNalozena(true);
+						v->setNalozene(p->getHmotnost()); //zvysi nalozene o hmotnost palety
+						//ostatne->tryRemove(p); //PADA PROGRAM
+					}
+				}
+			}
+		}
+		//vymazem zo skladu nalozene a nezrealizovane palety
+		for (Zasielka* z : *aSklad) {
+			for (Paleta* p : *z->getPalety()) {
+				if (p->jeNalozena() || !(p->jeZrealizovana())) z->getPalety()->tryRemove(p);
+			}
+		}
+		delete prvejTriedy;
+		delete ostatne;
+	}
 }
+

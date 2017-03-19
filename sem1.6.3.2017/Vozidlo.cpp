@@ -8,6 +8,7 @@ Vozidlo::Vozidlo(string paSPZ, double paNosnost, string paDatum)
 	aOpotrebovanie = 0;
 	aRegion = 0;
 	aDatumZaradenia = paDatum;
+	aKolkoJeNalozene = 0.0;
 	aPalety = new ExplicitStack<Paleta*>();
 }
 
@@ -42,6 +43,11 @@ string Vozidlo::getDatum() const
 	return aDatumZaradenia;
 }
 
+ExplicitStack<Paleta*>* Vozidlo::getPalety()
+{
+	return aPalety;
+}
+
 void Vozidlo::setSPZ(string paSPZ)
 {
 	aSPZ = paSPZ;
@@ -60,6 +66,50 @@ void Vozidlo::zvysOpotrebovanie(int paRegion)
 void Vozidlo::setRegion(int paRegion)
 {
 	aRegion = paRegion;
+}
+
+bool Vozidlo::pridajPaletu(Paleta * paleta)
+{
+	if (aRegion == 0 || !(paleta->jeNalozena())) this->setRegion(paleta->getRegion());
+	if (paleta->getHmotnost() + aKolkoJeNalozene <= this->getNosnost() && this->aRegion == paleta->getRegion() && !(paleta->jeNalozena()))
+	{
+		aPalety->push(paleta);
+		paleta->setNalozena(true);
+		aKolkoJeNalozene += paleta->getHmotnost();
+		return true;
+	}
+	return false;
+}
+
+bool Vozidlo::mozemPridatPaletu(Paleta * paleta)
+{
+	if (aRegion == 0 || !(paleta->jeNalozena())) this->setRegion(paleta->getRegion());
+	if (paleta->getHmotnost() + aKolkoJeNalozene <= this->getNosnost() && this->aRegion == paleta->getRegion() && !(paleta->jeNalozena()))
+	{
+		aKolkoJeNalozene += paleta->getHmotnost();
+		return true;
+	}
+	return false;
+}
+
+void Vozidlo::vynulujKolkoJeNalozene()
+{
+	aKolkoJeNalozene = 0;
+}
+
+void Vozidlo::resetRegion()
+{
+	aRegion = 0;
+}
+
+double Vozidlo::getNalozene()
+{
+	return aKolkoJeNalozene;
+}
+
+void Vozidlo::setNalozene(double hmotnost)
+{
+	aKolkoJeNalozene += hmotnost;
 }
 
 
