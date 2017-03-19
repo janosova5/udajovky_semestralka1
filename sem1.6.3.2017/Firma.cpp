@@ -347,6 +347,7 @@ void Firma::naplnenieVozidiel()
 				for (Vozidlo* v : *aRozvazajuceVozidla) {
 					if (v->mozemPridatPaletu(p) == false) { //ked sa najde co i len jedna paleta, ktora sa neda nalozit
 						mozuSaNalozit = false;
+						p->setNalozena(false);
 						//koniecCyklu = true;
 						break;
 					}
@@ -357,27 +358,24 @@ void Firma::naplnenieVozidiel()
 			//if (koniecCyklu) break;
 		}
 	}
+	for (Vozidlo* v : *aRozvazajuceVozidla)
+	{
+		v->vynulujKolkoJeNalozene();
+		v->resetRegion();
+	}
 	//ak sa mozu nalozit, naloz ich
 	if (mozuSaNalozit) {
 		cout << "mozu sa nalozit" << endl;
-		for (Vozidlo* v : *aRozvazajuceVozidla) {
-			v->vynulujKolkoJeNalozene();
-			v->resetRegion();
-			for (Zasielka* z : *aSklad) {
-				for (Paleta* p : *z->getPalety()) {
+		for (Zasielka* z : *aSklad) {
+			for (Paleta* p : *z->getPalety()) {
+				for (Vozidlo* v : *aRozvazajuceVozidla) {
 					v->pridajPaletu(p);
-					p->setNalozena(true);
 				}
 			}
 		}
 	}
 	//ak sa nemozu nalozit
 	else {
-		for (Vozidlo* v : *aRozvazajuceVozidla)
-		{
-			v->vynulujKolkoJeNalozene();
-			v->resetRegion();
-		}
 		ArrayList<Paleta*> *prvejTriedy = new ArrayList<Paleta*>(5);
 		ArrayList<Paleta*> *ostatne = new ArrayList<Paleta*>(5);
 		//roztriedenie
