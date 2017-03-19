@@ -47,7 +47,7 @@ public:
 	void vylozeniePalietDoSkladu(Kamion* paKamion); //6
 	void vypisSklad(); //otestovanie 6
 	double vratMaxNosnost();
-	void naplnenieVozidiel();
+	void naplnenieVozidiel(string paDatum);
 	void otestujPrioritnyFront1();
 	void skontrolujOpotrebovanie();
 	void vypisPaletyZVozidiel();

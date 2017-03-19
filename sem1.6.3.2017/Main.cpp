@@ -19,10 +19,10 @@ int main() {
 	cout << datum->budePrvySkor("15.03.2017", datum->getDnesnyDatum()) << endl;
 	Vozidlo* vozidlo1 = new Vozidlo("abcd123", 20.6, "05.05.2015");
 	Vozidlo* vozidlo2 = new Vozidlo("efgh123", 21.6, "25.05.2016");
-	//Vozidlo* vozidlo3 = new Vozidlo("ijkl123", 9.6, "04.01.2017");
+	Vozidlo* vozidlo3 = new Vozidlo("ijkl123", 9.6, "04.01.2017");
 	firma->pridajNoveVozidlo(vozidlo1);
 	firma->pridajNoveVozidlo(vozidlo2);
-	//firma->pridajNoveVozidlo(vozidlo3);
+	firma->pridajNoveVozidlo(vozidlo3);
 	cout << "max nosnost: " << firma->vratMaxNosnost() << endl;
 	//firma->pridajNoveVozidlo();
 	//firma->pridajNoveVozidlo();
@@ -44,8 +44,8 @@ int main() {
 	kamion->getObsah()->add(paleta2);
 	Paleta* paleta3 = new Paleta(1, 0.2, true, "20.03.2017", dod1);
 	cout << paleta3->getDatumDorucenia() << endl;
-	Paleta* paleta4 = new Paleta(2, 12.9, true, "21.03.2017", dod1);
-	Paleta* paleta5 = new Paleta(2, 2.1, true, "20.03.2017", dod1);
+	Paleta* paleta4 = new Paleta(2, 12.9, true, "20.03.2017", dod1);
+	Paleta* paleta5 = new Paleta(3, 10.1, true, "20.03.2017", dod1);
 	Paleta* paleta6 = new Paleta(2, 3.1, false, "", dod1);
 	Kamion* kamion1 = new Kamion("01.02.2017");
 	kamion1->getObsah()->add(paleta3);
@@ -60,7 +60,7 @@ int main() {
 	//firma->vypisKamiony();
 	firma->vypisSklad();
 	cout << "Naplnenie vozidiel" << endl;
-	firma->naplnenieVozidiel();
+	firma->naplnenieVozidiel("20.03.2017"); //do tejto metody asi pojde parameter datum, ze ktory den sa ide rozvazat
 	firma->vypisPaletyZVozidiel();
 	//firma->vypisSklad();
 	//firma->otestujPrioritnyFront1();

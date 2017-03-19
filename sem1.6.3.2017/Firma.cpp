@@ -280,7 +280,7 @@ double Firma::vratMaxNosnost()
 }
 
 
-void Firma::naplnenieVozidiel()
+void Firma::naplnenieVozidiel(string datum)
 {
 	//etst
 	/**int j = 0;
@@ -381,7 +381,7 @@ void Firma::naplnenieVozidiel()
 		//roztriedenie
 		for (Zasielka* z : *aSklad) {
 			for (Paleta* p : *z->getPalety()) {
-				if (p->jePrvejTriedy()) prvejTriedy->add(p);
+				if (p->jePrvejTriedy() && p->getDatumDorucenia() == datum) prvejTriedy->add(p);
 				else ostatne->add(p);
 			}
 		}
@@ -403,7 +403,10 @@ void Firma::naplnenieVozidiel()
 		}
 		//oznacia sa ako nezrealizovane 
 		for (Paleta* p : *prvejTriedy) {
-			if (!(p->jeNalozena())) p->setZrealizovana(false);
+			if (!(p->jeNalozena())) {
+				p->setZrealizovana(false);
+				cout << "Nezrealizovana: " << p->getHmotnost() << endl;
+			}
 		}
 		//prejdem vsetky auta a ak nejake maju volne kapacity, nalozim zvysne palety
 		//ostatne->sortPodlaDatumu();
