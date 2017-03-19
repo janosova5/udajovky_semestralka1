@@ -5,12 +5,12 @@
 
 Firma::Firma()
 {
-	aEvidenciaVozidiel = new ArrayList<Vozidlo*>(5); 
-	aRozvazajuceVozidla = new ArrayList<Vozidlo*>(5); 
+	aEvidenciaVozidiel = new ArrayList<Vozidlo*>(5);
+	aRozvazajuceVozidla = new ArrayList<Vozidlo*>(5);
 	aVyradeneVozidla = new LinkedList<Vozidlo*>(); //zatial to dam ako linkedlist kym nezozeniem funkcne explicit queue
 	aSklad = new ArrayList<Zasielka*>(5);
-	aDodavatelia = new ArrayList<Dodavatel*>(5); 
-	aKamiony = new LinkedList<Kamion*>(); 
+	aDodavatelia = new ArrayList<Dodavatel*>(5);
+	aKamiony = new LinkedList<Kamion*>();
 	aNezrealizovane = new ArrayList<Paleta*>(5);
 }
 
@@ -90,7 +90,7 @@ bool Firma::pridajNovehoDodavatela(Dodavatel* dodavatel)
 			{
 				i++;
 			}
-			aDodavatelia->insert(dodavatel,i); 
+			aDodavatelia->insert(dodavatel, i);
 			//cout << i; 
 		}
 		return true;
@@ -104,7 +104,7 @@ bool Firma::pridajNovehoDodavatela(Dodavatel* dodavatel)
 void Firma::vypisDodavatelov()
 {
 	//cout << " " << aDodavatelia->size();
-	for (Dodavatel* D : *aDodavatelia) { 
+	for (Dodavatel* D : *aDodavatelia) {
 		cout << D->toString() << endl;
 	}
 	//for (int i = 0; i < aDodavatelia->size(); i++)
@@ -126,7 +126,7 @@ void Firma::otestujPrioritnyFront1()
 	skuska->push(8.5, 1);
 	skuska->push(1.9, 1);
 	for (int i = 0; i < skuska->size(); i++) {
-		cout << skuska->peek(i) <<endl;
+		cout << skuska->peek(i) << endl;
 	}
 	delete skuska;
 }
@@ -162,12 +162,12 @@ void Firma::vypis() //IBA NA OTESTOVANIE PRIOR.FRONTU!
 	//{
 		//cout << aMozuRozvazat->peek(i)->getOpotrebovanie() << endl;
 	//}
-	
+
 }
 
 void Firma::vypisVozidlaPodlaDatumu()
 {
-	for (Vozidlo* V : *aEvidenciaVozidiel) { 
+	for (Vozidlo* V : *aEvidenciaVozidiel) {
 		cout << "SPZ: " << V->getSPZ() << ", nosnost: " << V->getNosnost() << ", opotrebovanie: " << V->getOpotrebovanie();
 	}
 }
@@ -175,9 +175,9 @@ void Firma::vypisVozidlaPodlaDatumu()
 void Firma::ohlasKamion(Kamion* paKamion) //ten kamion sa musi predtym niekde vytvorit, cize sa musi naplnit jeho pole paletami
 //a urcit datum, to bude asi niekde v main, moze sa to nacitat zo suboru alebo najskor skusim to tam natvrdo hodit nejake atributy
 {
-	aKamiony->add(paKamion); 
+	aKamiony->add(paKamion);
 	for (Kamion* K : *aKamiony) {
-		for(int i = 0; i < K->getObsah()->size(); i++) //kazdej palete sa nastavi datum prichodu, treba to kvoli metode 13
+		for (int i = 0; i < K->getObsah()->size(); i++) //kazdej palete sa nastavi datum prichodu, treba to kvoli metode 13
 			K->getObsah()->operator[](i)->setDatumPrichodu(K->getDatumPrichodu());
 	}
 }
@@ -209,7 +209,7 @@ void Firma::vylozeniePalietDoSkladu(Kamion* K) //funguje
 		velkost = pom->size(); //velkost pomocneho pola
 		//cout << velkost << endl;
 		//ak paleta splna podmienky, prida sa do skladu, ak ich nesplna, do skladu sa neprida
-		if (K->getObsah()->operator[](i)->getHmotnost() <= vratMaxNosnost() && !(dnes->budePrvySkor(K->getObsah()->operator[](i)->getDatumDorucenia(),dnes->getDnesnyDatum())) || !(K->getObsah()->operator[](i)->jePrvejTriedy())) {
+		if (K->getObsah()->operator[](i)->getHmotnost() <= vratMaxNosnost() && !(dnes->budePrvySkor(K->getObsah()->operator[](i)->getDatumDorucenia(), dnes->getDnesnyDatum())) || !(K->getObsah()->operator[](i)->jePrvejTriedy())) {
 			if (velkost == 0) {
 				Zasielka* zasielka = new Zasielka(K->getObsah()->operator[](i)->getRegion());
 				//do kontajnera paliet zasielky pridam zasielku, ktora splna dany region
@@ -248,8 +248,8 @@ void Firma::vylozeniePalietDoSkladu(Kamion* K) //funguje
 			//aSklad->add(zasielka);
 		}
 	}
-		//}
 	//}
+//}
 	delete dnes;
 	delete pom;
 	delete zasielky;
@@ -342,9 +342,9 @@ void Firma::naplnenieVozidiel()
 	if (aSklad->size() > aRozvazajuceVozidla->size()) mozuSaNalozit = false;
 	//inak skontroluj ci sa mozu nalozit vsetky
 	else {
-		for (Vozidlo* v : *aRozvazajuceVozidla) {
-			for (Zasielka* z : *aSklad) {
-				for (Paleta* p : *z->getPalety()) {
+		for (Zasielka* z : *aSklad) {
+			for (Paleta* p : *z->getPalety()) {
+				for (Vozidlo* v : *aRozvazajuceVozidla) {
 					if (v->mozemPridatPaletu(p) == false) { //ked sa najde co i len jedna paleta, ktora sa neda nalozit
 						mozuSaNalozit = false;
 						//koniecCyklu = true;
@@ -352,12 +352,14 @@ void Firma::naplnenieVozidiel()
 					}
 				}
 				//if (koniecCyklu) break;
+				p->setNalozena(false);
 			}
 			//if (koniecCyklu) break;
 		}
 	}
 	//ak sa mozu nalozit, naloz ich
 	if (mozuSaNalozit) {
+		cout << "mozu sa nalozit" << endl;
 		for (Vozidlo* v : *aRozvazajuceVozidla) {
 			v->vynulujKolkoJeNalozene();
 			v->resetRegion();
@@ -371,7 +373,7 @@ void Firma::naplnenieVozidiel()
 	}
 	//ak sa nemozu nalozit
 	else {
-		for(Vozidlo* v: *aRozvazajuceVozidla)
+		for (Vozidlo* v : *aRozvazajuceVozidla)
 		{
 			v->vynulujKolkoJeNalozene();
 			v->resetRegion();
@@ -403,7 +405,7 @@ void Firma::naplnenieVozidiel()
 		}
 		//oznacia sa ako nezrealizovane 
 		for (Paleta* p : *prvejTriedy) {
-			if(!(p->jeNalozena())) p->setZrealizovana(false);
+			if (!(p->jeNalozena())) p->setZrealizovana(false);
 		}
 		//prejdem vsetky auta a ak nejake maju volne kapacity, nalozim zvysne palety
 		//ostatne->sortPodlaDatumu();
@@ -421,11 +423,16 @@ void Firma::naplnenieVozidiel()
 			}
 		}
 		//vymazem zo skladu nalozene a nezrealizovane palety
+		//TU TO PADA KVOLI VYMAZAVANIU 
+		//TOTO ESTE VYRIESIT
+		/**
 		for (Zasielka* z : *aSklad) {
-			for (Paleta* p : *z->getPalety()) {
-				if (p->jeNalozena() || !(p->jeZrealizovana())) z->getPalety()->tryRemove(p);
+			int pocet = z->getPalety()->size();
+			for (int i = 0; i <= pocet; i++) {
+				if (z->getPalety()->operator[](i)->jeNalozena() || !(z->getPalety()->operator[](i)->jeZrealizovana())) z->getPalety()->removeAt(i++);
 			}
 		}
+		*/
 		delete prvejTriedy;
 		delete ostatne;
 	}

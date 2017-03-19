@@ -70,26 +70,32 @@ void Vozidlo::setRegion(int paRegion)
 
 bool Vozidlo::pridajPaletu(Paleta * paleta)
 {
-	if (aRegion == 0 || !(paleta->jeNalozena())) this->setRegion(paleta->getRegion());
-	if (paleta->getHmotnost() + aKolkoJeNalozene <= this->getNosnost() && this->aRegion == paleta->getRegion() && !(paleta->jeNalozena()))
-	{
-		aPalety->push(paleta);
-		paleta->setNalozena(true);
-		aKolkoJeNalozene += paleta->getHmotnost();
-		return true;
+	if (!(paleta->jeNalozena())) {
+		if (aRegion == 0) this->setRegion(paleta->getRegion());
+		if (paleta->getHmotnost() + aKolkoJeNalozene <= this->getNosnost() && this->aRegion == paleta->getRegion() && !(paleta->jeNalozena()))
+		{
+			aPalety->push(paleta);
+			paleta->setNalozena(true);
+			aKolkoJeNalozene += paleta->getHmotnost();
+			return true;
+		}
 	}
 	return false;
 }
 
 bool Vozidlo::mozemPridatPaletu(Paleta * paleta)
 {
-	if (aRegion == 0 || !(paleta->jeNalozena())) this->setRegion(paleta->getRegion());
-	if (paleta->getHmotnost() + aKolkoJeNalozene <= this->getNosnost() && this->aRegion == paleta->getRegion() && !(paleta->jeNalozena()))
-	{
-		aKolkoJeNalozene += paleta->getHmotnost();
-		return true;
+	if (!(paleta->jeNalozena())) {
+		if (aRegion == 0) this->setRegion(paleta->getRegion());
+		if (paleta->getHmotnost() + aKolkoJeNalozene <= this->getNosnost() && this->aRegion == paleta->getRegion() && !(paleta->jeNalozena()))
+		{
+			aKolkoJeNalozene += paleta->getHmotnost();
+			paleta->setNalozena(true);
+			return true;
+		}
+		else return false;
 	}
-	return false;
+	return true;
 }
 
 void Vozidlo::vynulujKolkoJeNalozene()
