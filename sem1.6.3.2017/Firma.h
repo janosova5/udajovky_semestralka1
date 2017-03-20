@@ -51,5 +51,8 @@ public:
 	void otestujPrioritnyFront1();
 	void skontrolujOpotrebovanie();
 	void vypisPaletyZVozidiel();
+	void sortPodlaOpotrebovanosti();
+	void sortPodlaHmotnosti(ArrayList<Paleta*> *prvejTriedy);
+	void sortPodlaDatumu(ArrayList<Paleta*> *ostatne);
 };
 

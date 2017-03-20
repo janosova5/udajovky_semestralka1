@@ -154,6 +154,50 @@ void Firma::vypisPaletyZVozidiel()
 
 }
 
+void Firma::sortPodlaOpotrebovanosti()
+{
+	for (int i = 0; i < aRozvazajuceVozidla->size() - 1; i++) {
+		for (int j = 0; j < aRozvazajuceVozidla->size() - i - 1; j++) {
+			if (aRozvazajuceVozidla->operator[](j + 1)->getOpotrebovanie() < aRozvazajuceVozidla->operator[](j)->getOpotrebovanie()) {
+				Vozidlo* najmensie = aRozvazajuceVozidla->operator[](j+1);
+				aRozvazajuceVozidla->operator[](j + 1) = aRozvazajuceVozidla->operator[](j);
+				aRozvazajuceVozidla->operator[](j) = najmensie;
+			}
+		}
+	}
+}
+
+void Firma::sortPodlaHmotnosti(ArrayList<Paleta*>* prvejTriedy)
+{
+	for (int i = 0; i < prvejTriedy->size() - 1; i++) {
+		for (int j = 0; j < prvejTriedy->size() - i - 1; j++) {
+			if (prvejTriedy->operator[](j + 1)->getHmotnost() < prvejTriedy->operator[](j)->getHmotnost()) {
+				Paleta* najmensie = prvejTriedy->operator[](j + 1);
+				prvejTriedy->operator[](j + 1) = prvejTriedy->operator[](j);
+				prvejTriedy->operator[](j) = najmensie;
+			}
+		}
+	}
+}
+
+void Firma::sortPodlaDatumu(ArrayList<Paleta*>* ostatne)
+{
+	Datum * datum = new Datum();
+	for (int i = 0; i < ostatne->size() - 1; i++) {
+		for (int j = 0; j < ostatne->size() - i - 1; j++) {
+			if (datum->budePrvySkor((*ostatne)[j + 1]->getDatumPrichodu(), (*ostatne)[j]->getDatumPrichodu())) {
+
+				Paleta * najmensia = (*ostatne)[j + 1];
+				(*ostatne)[j + 1] = (*ostatne)[j];
+				(*ostatne)[j] = najmensia;
+
+			}
+		}
+	}
+	delete datum;
+
+}
+
 void Firma::vypis() //IBA NA OTESTOVANIE PRIOR.FRONTU!
 {
 	//int pocet = aMozuRozvazat->size();
@@ -338,104 +382,137 @@ void Firma::naplnenieVozidiel(string datum)
 	//ak zasielok t.j regionov je viac ako vozidiel, hned je jasne, ze sa nemozu nalozit vsetky palety
 	//bool koniecCyklu = false;
 	bool mozuSaNalozit = true;
-	//aRozvazajuceVozidla->sortPodlaOpotrebovanosti();
+	this->sortPodlaOpotrebovanosti(); //tu zoradi vozidla podla opotrebovanosti
 	if (aSklad->size() > aRozvazajuceVozidla->size()) mozuSaNalozit = false;
 	//inak skontroluj ci sa mozu nalozit vsetky
 	else {
-		for (Zasielka* z : *aSklad) {
-			for (Paleta* p : *z->getPalety()) {
-				for (Vozidlo* v : *aRozvazajuceVozidla) {
-					if (v->mozemPridatPaletu(p) == false) { //ked sa najde co i len jedna paleta, ktora sa neda nalozit
-						mozuSaNalozit = false;
-						p->setNalozena(false);
-						//koniecCyklu = true;
-						break;
+		for (Vozidlo* v : *aRozvazajuceVozidla) {
+			for (Zasielka* z : *aSklad) {
+				for (Paleta* p : *z->getPalety()) {
+					if (!(p->jeNalozena())) {
+						if (p->getHmotnost() + v->getNalozene() <= v->getNosnost()) {
+							if (v->getRegion() == 0) v->setRegion(p->getRegion());
+							if (v->getRegion() == p->getRegion()) {
+								v->setNalozene(p->getHmotnost());
+								p->setNalozena(true);
+								//if (v->mozemPridatPaletu(p) == false) { //ked sa najde co i len jedna paleta, ktora sa neda nalozit
+									//mozuSaNalozit = false;
+									//p->setNalozena(false);
+									//koniecCyklu = true;
+									//break;
+							}
+						}
 					}
+					//if (koniecCyklu) break;
+					//p->setNalozena(false);
 				}
 				//if (koniecCyklu) break;
+			}
+		}
+
+		//VYRESETOVANIE
+		for (Vozidlo* v : *aRozvazajuceVozidla)
+		{
+			v->vynulujKolkoJeNalozene();
+			v->resetRegion();
+		}
+		int pocetNalozenych = 0;
+		int pocetPaliet = 0;
+		for (Zasielka* z : *aSklad) {
+			for (Paleta* p : *z->getPalety()) {
+				pocetPaliet++;
+				if (p->jeNalozena()) pocetNalozenych++;
 				p->setNalozena(false);
 			}
-			//if (koniecCyklu) break;
 		}
-	}
-	for (Vozidlo* v : *aRozvazajuceVozidla)
-	{
-		v->vynulujKolkoJeNalozene();
-		v->resetRegion();
-	}
-	//ak sa mozu nalozit, naloz ich
-	if (mozuSaNalozit) {
-		cout << "mozu sa nalozit" << endl;
-		for (Zasielka* z : *aSklad) {
-			for (Paleta* p : *z->getPalety()) {
-				for (Vozidlo* v : *aRozvazajuceVozidla) {
-					v->pridajPaletu(p);
+		if (pocetNalozenych < pocetPaliet) mozuSaNalozit = false; //ak sa stane, ze co i len jedna paleta nebola nalozena, hned false
+
+		//ak sa mozu nalozit, naloz ich
+		if (mozuSaNalozit) {
+			cout << "mozu sa nalozit" << endl;
+			for (Vozidlo* v : *aRozvazajuceVozidla) {
+				for (Zasielka* z : *aSklad) {
+					for (Paleta* p : *z->getPalety()) {
+						if (!(p->jeNalozena())) {
+							if (p->getHmotnost() + v->getNalozene() <= v->getNosnost()) {
+								if (v->getRegion() == 0) v->setRegion(p->getRegion());
+								if (v->getRegion() == p->getRegion()) {
+									v->getPalety()->push(p);
+									v->setNalozene(p->getHmotnost());
+									p->setNalozena(true);
+								}
+							}
+						}
+					}
 				}
 			}
 		}
-	}
-	//ak sa nemozu nalozit
-	else {
-		ArrayList<Paleta*> *prvejTriedy = new ArrayList<Paleta*>(5);
-		ArrayList<Paleta*> *ostatne = new ArrayList<Paleta*>(5);
-		//roztriedenie
-		for (Zasielka* z : *aSklad) {
-			for (Paleta* p : *z->getPalety()) {
-				if (p->jePrvejTriedy() && p->getDatumDorucenia() == datum) prvejTriedy->add(p);
-				else ostatne->add(p);
+		//ak sa nemozu nalozit
+		else {
+			cout << "nemozu sa nalozit" << endl;
+			ArrayList<Paleta*> *prvejTriedy = new ArrayList<Paleta*>(5);
+			ArrayList<Paleta*> *ostatne = new ArrayList<Paleta*>(5);
+			//roztriedenie
+			for (Zasielka* z : *aSklad) {
+				for (Paleta* p : *z->getPalety()) {
+					if (p->jePrvejTriedy() && p->getDatumDorucenia() == datum) prvejTriedy->add(p);
+					else ostatne->add(p);
+				}
 			}
-		}
-		//prvejTriedy->sortPodlaHmotnosti();
-		for (Vozidlo* v : *aRozvazajuceVozidla) {
+			this->sortPodlaHmotnosti(prvejTriedy); //tu zotriedi palety podla hmotnosti
+			for (Vozidlo* v : *aRozvazajuceVozidla) {
+				for (Paleta* p : *prvejTriedy) {
+					if (!(p->jeNalozena())) {
+						if (p->getHmotnost() + v->getNalozene() <= v->getNosnost()) {
+							if (v->getRegion() == 0) v->setRegion(p->getRegion());
+							if (v->getRegion() == p->getRegion()) {
+								v->getPalety()->push(p);
+								v->setNalozene(p->getHmotnost());
+								p->setNalozena(true);
+							}
+						}
+					}
+				}
+			}
+			//oznacia sa ako nezrealizovane 
 			for (Paleta* p : *prvejTriedy) {
 				if (!(p->jeNalozena())) {
-					if (v->getRegion() == 0) v->setRegion(p->getRegion());
-					if (p->getHmotnost() + v->getNalozene() <= v->getNosnost() && v->getRegion() == p->getRegion() && !(p->jeNalozena())) {
-						v->getPalety()->push(p); //pridaj paletu do stacku auta
-						p->setNalozena(true);
-						v->setNalozene(p->getHmotnost()); //zvysi nalozene o hmotnost palety
-						//PADA PROGRAM
-						//prvejTriedy->tryRemove(p); //vymaz ju z pomocneho pola, lebo dalej vsetky zasielky, kt. ostanu v tomto poli budu nezrealizovane
-
+					p->setZrealizovana(false);
+					cout << "Nezrealizovana: " << p->getHmotnost() << endl;
+				}
+			}
+			//prejdem vsetky auta a ak nejake maju volne kapacity, nalozim zvysne palety
+			if (ostatne->size() > 0) { //ak vobec mam nejake ostatne palety
+				this->sortPodlaDatumu(ostatne);
+				for (Vozidlo* v : *aRozvazajuceVozidla) {
+					for (Paleta* p : *ostatne) {
+						if (!(p->jeNalozena())) {
+							if (p->getHmotnost() + v->getNalozene() <= v->getNosnost()) {
+								if (v->getRegion() == 0) v->setRegion(p->getRegion());
+								if (v->getRegion() == p->getRegion()) {
+									v->getPalety()->push(p);
+									v->setNalozene(p->getHmotnost());
+									p->setNalozena(true);
+								}
+							}
+						}
 					}
 				}
 			}
-		}
-		//oznacia sa ako nezrealizovane 
-		for (Paleta* p : *prvejTriedy) {
-			if (!(p->jeNalozena())) {
-				p->setZrealizovana(false);
-				cout << "Nezrealizovana: " << p->getHmotnost() << endl;
-			}
-		}
-		//prejdem vsetky auta a ak nejake maju volne kapacity, nalozim zvysne palety
-		//ostatne->sortPodlaDatumu();
-		for (Vozidlo* v : *aRozvazajuceVozidla) {
-			for (Paleta* p : *ostatne) {
-				if (!(p->jeNalozena())) {
-					if (v->getRegion() == 0) v->setRegion(p->getRegion());
-					if (p->getHmotnost() + v->getNalozene() <= v->getNosnost() && v->getRegion() == p->getRegion() && !(p->jeNalozena())) {
-						v->getPalety()->push(p); //pridaj paletu do stacku auta
-						p->setNalozena(true);
-						v->setNalozene(p->getHmotnost()); //zvysi nalozene o hmotnost palety
-						//ostatne->tryRemove(p); //PADA PROGRAM
-					}
+			//vymazem zo skladu nalozene a nezrealizovane palety
+			//TU TO PADA KVOLI VYMAZAVANIU 
+			//TOTO ESTE VYRIESIT
+			/**
+			for (Zasielka* z : *aSklad) {
+				int pocet = z->getPalety()->size();
+				for (int i = 0; i <= pocet; i++) {
+					if (z->getPalety()->operator[](i)->jeNalozena() || !(z->getPalety()->operator[](i)->jeZrealizovana())) z->getPalety()->removeAt(i++);
 				}
 			}
+			*/
+			delete prvejTriedy;
+			delete ostatne;
 		}
-		//vymazem zo skladu nalozene a nezrealizovane palety
-		//TU TO PADA KVOLI VYMAZAVANIU 
-		//TOTO ESTE VYRIESIT
-		/**
-		for (Zasielka* z : *aSklad) {
-			int pocet = z->getPalety()->size();
-			for (int i = 0; i <= pocet; i++) {
-				if (z->getPalety()->operator[](i)->jeNalozena() || !(z->getPalety()->operator[](i)->jeZrealizovana())) z->getPalety()->removeAt(i++);
-			}
-		}
-		*/
-		delete prvejTriedy;
-		delete ostatne;
 	}
 }
 
