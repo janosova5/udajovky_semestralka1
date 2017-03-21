@@ -32,7 +32,7 @@ void Dodavatel::setObchodnyNazov(string paObchodnyNazov)
 
 void Dodavatel::setMnozstvoNeprevzatych(int paPocet)
 {
-	aMnozstvoNeprevzatychPaliet = paPocet;
+	aMnozstvoNeprevzatychPaliet += paPocet;
 }
 
 string Dodavatel::toString()

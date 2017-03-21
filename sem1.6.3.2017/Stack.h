@@ -110,6 +110,7 @@ namespace DS
 	template<typename T>
 	const T& Stack<T>::peek() const
 	{
-		return (*list_)[indexOfPeek()];;
+		return (*list_)[indexOfPeek()];
 	}
+
 }

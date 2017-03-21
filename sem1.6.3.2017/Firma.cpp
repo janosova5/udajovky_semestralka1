@@ -1,12 +1,13 @@
 #include "Firma.h"
 #include <iostream>
-
+#include <random>
+#include <chrono>
 
 
 Firma::Firma()
 {
 	aEvidenciaVozidiel = new ArrayList<Vozidlo*>(5);
-	aRozvazajuceVozidla = new ArrayList<Vozidlo*>(5);
+	aRozvazajuceVozidla = new PriorityQueue_Heap<Vozidlo*>();
 	aVyradeneVozidla = new LinkedList<Vozidlo*>(); //zatial to dam ako linkedlist kym nezozeniem funkcne explicit queue
 	aSklad = new ArrayList<Zasielka*>(5);
 	aDodavatelia = new ArrayList<Dodavatel*>(5);
@@ -18,10 +19,15 @@ Firma::Firma()
 Firma::~Firma() // ????? 
 {
 	//TODO aafasfas
-	aEvidenciaVozidiel->clear();
-	delete aEvidenciaVozidiel;
+	//aEvidenciaVozidiel->clear();
+	//delete aEvidenciaVozidiel;
+	for (Vozidlo* v : *aEvidenciaVozidiel) { //tymto sa deletnu vsetky vozidla, ktore sa nachadzaju realne v pamati
+		v->~Vozidlo();
+		delete v;
+	}
 	aRozvazajuceVozidla->clear();
-	delete aRozvazajuceVozidla;
+	delete aRozvazajuceVozidla; //tymto sa deletne ten new arraylist
+	//takisto aj dalej
 	aVyradeneVozidla->clear();
 	delete aVyradeneVozidla;
 	aSklad->clear();
@@ -48,7 +54,7 @@ bool Firma::pridajNoveVozidlo(Vozidlo* vozidlo) //pridaj nove vozidlo do evidenc
 	}
 	if (pom == false) {
 		if (aEvidenciaVozidiel->size() == 0) {
-			aRozvazajuceVozidla->add(vozidlo);
+			aRozvazajuceVozidla->push(0,vozidlo);
 			//aMozuRozvazat->push(0, vozidlo);
 			aEvidenciaVozidiel->add(vozidlo);
 		}
@@ -58,7 +64,7 @@ bool Firma::pridajNoveVozidlo(Vozidlo* vozidlo) //pridaj nove vozidlo do evidenc
 				i++;
 			}
 			aEvidenciaVozidiel->insert(vozidlo, i);
-			aRozvazajuceVozidla->add(vozidlo);
+			aRozvazajuceVozidla->push(0,vozidlo);
 			//aMozuRozvazat->push(0, vozidlo);
 			//cout << i; 
 		}
@@ -131,6 +137,7 @@ void Firma::otestujPrioritnyFront1()
 	delete skuska;
 }
 
+/**
 void Firma::skontrolujOpotrebovanie()
 {
 	for (Vozidlo* v : *aRozvazajuceVozidla) {
@@ -140,20 +147,37 @@ void Firma::skontrolujOpotrebovanie()
 		}
 	}
 }
+*/
 
-void Firma::vypisPaletyZVozidiel()
+void Firma::vypisPaletyZVozidiel() //iba na kontrolu
 {
-	for (Vozidlo* v : *aRozvazajuceVozidla) {
-		cout << v->getPalety()->size() << endl;
-		int pocet = v->getPalety()->size();
-		for (int i = 0; i < pocet; i++)
-		{
-			cout << v->getPalety()->pop()->getHmotnost() << endl;
+	//ArrayList <Vozidlo*> *vozidla = new ArrayList<Vozidlo*>();
+	//int pocet = aRozvazajuceVozidla->size();
+	//for (Vozidlo* v : *aEvidenciaVozidiel) {
+		//if (v->getNalozene() == false) aRozvazajuceVozidla->push(v->getOpotrebovanie(), v);
+	//}
+	for (Vozidlo* v : *aEvidenciaVozidiel) {
+		if (v->jeNaCeste()) {
+			ArrayList <Paleta*> *pom = new ArrayList<Paleta*>();
+			cout << v->getPalety()->size() << endl;
+			int pocet = v->getPalety()->size();
+			for (int i = 0; i < pocet; i++)
+			{
+				pom->add(v->getPalety()->pop());
+				cout << pom->operator[](i)->getHmotnost() << endl;
+			}
+			for (int i = 0; i < pocet; i++)
+			{
+				v->getPalety()->push(pom->operator[](i));
+			}
+			delete pom;
 		}
 	}
+	//delete vozidla;
+
 
 }
-
+/**
 void Firma::sortPodlaOpotrebovanosti()
 {
 	for (int i = 0; i < aRozvazajuceVozidla->size() - 1; i++) {
@@ -166,6 +190,7 @@ void Firma::sortPodlaOpotrebovanosti()
 		}
 	}
 }
+*/
 
 void Firma::sortPodlaHmotnosti(ArrayList<Paleta*>* prvejTriedy)
 {
@@ -196,6 +221,98 @@ void Firma::sortPodlaDatumu(ArrayList<Paleta*>* ostatne)
 	}
 	delete datum;
 
+}
+
+void Firma::nemozuSaNalozitVsetky(string datum, ArrayList<Vozidlo*> *pom)
+{
+	cout << "nemozu sa nalozit" << endl;
+	ArrayList<Paleta*> *prvejTriedy = new ArrayList<Paleta*>(5);
+	ArrayList<Paleta*> *ostatne = new ArrayList<Paleta*>(5);
+	//roztriedenie
+	for (Zasielka* z : *aSklad) {
+		for (Paleta* p : *z->getPalety()) {
+			if (p->jePrvejTriedy() && p->getDatumDorucenia() == datum) prvejTriedy->add(p);
+			else ostatne->add(p);
+		}
+	}
+	if (prvejTriedy->size() > 0) {
+		this->sortPodlaHmotnosti(prvejTriedy); //tu zotriedi palety podla hmotnosti
+		for (Vozidlo* v : *pom) {
+			for (Paleta* p : *prvejTriedy) {
+				v->pridajPaletu(p);
+				v->setJeNaCeste(true);
+			}
+		}
+		//oznacia sa ako nezrealizovane 
+		for (Paleta* p : *prvejTriedy) {
+			if (!(p->jeNalozena())) {
+				p->setZrealizovana(false);
+				p->setDatumVratenia(datum);
+				cout << "Nezrealizovana: " << p->getHmotnost() << endl;
+			}
+		}
+	}
+	//prejdem vsetky auta a ak nejake maju volne kapacity, nalozim zvysne palety
+	if (ostatne->size() > 0) { //ak vobec mam nejake ostatne palety
+		this->sortPodlaDatumu(ostatne);
+		for (Vozidlo* v : *pom) {
+			for (Paleta* p : *ostatne) {
+				v->pridajPaletu(p);
+				v->setJeNaCeste(true);
+			}
+		}
+	}
+	for (Vozidlo* v : *pom) { //ak nejake vozidlo zostalo prazdne, hod ho spat do prioritneho frontu vozidiel, kt mozu rozvazat
+		if (v->jeNaCeste() == false) aRozvazajuceVozidla->push(v->getOpotrebovanie(), v);
+	}
+	//vymazem zo skladu nalozene a nezrealizovane palety
+	//TU TO PADA KVOLI VYMAZAVANIU 
+	//TOTO ESTE VYRIESIT
+	/**
+	for (Zasielka* z : *aSklad) {
+	int pocet = z->getPalety()->size();
+	for (int i = 0; i <= pocet; i++) {
+	if (z->getPalety()->operator[](i)->jeNalozena() || !(z->getPalety()->operator[](i)->jeZrealizovana())) z->getPalety()->removeAt(i++);
+	}
+	}
+	
+	for (Zasielka* z : *aSklad) {
+		for (Paleta* p : *z->getPalety()) {
+			if (p->jeNalozena() || !(p->jeZrealizovana())) z->getPalety()->tryRemove(p);
+		}
+	}
+	*/
+	delete pom;
+	delete prvejTriedy;
+	delete ostatne;
+}
+
+void Firma::vylozenieVozidla(Vozidlo * vozidlo)
+{
+	int pocet = vozidlo->getPalety()->size();
+	for (int i = 0; i < pocet; i++) {
+		if (this->randBetween0and1() < 0.05) {
+			Paleta *paleta = vozidlo->getPalety()->pop();
+			paleta->setPrevzata(false);
+			paleta->getDodavatel()->setMnozstvoNeprevzatych(1);
+		}
+		else vozidlo->getPalety()->pop();
+	}
+}
+
+double Firma::randBetween0and1()
+{
+	std::mt19937_64 rng;
+	// initialize the random number generator with time-dependent seed
+	uint64_t timeSeed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	std::seed_seq ss{ uint32_t(timeSeed & 0xffffffff), uint32_t(timeSeed >> 32) };
+	rng.seed(ss);
+	// initialize a uniform distribution between 0 and 1
+	std::uniform_real_distribution<double> unif(0, 1);
+	// ready to generate random numbers
+	const int nSimulations = 10;
+	double currentRandomNumber = unif(rng);
+	return currentRandomNumber;
 }
 
 void Firma::vypis() //IBA NA OTESTOVANIE PRIOR.FRONTU!
@@ -233,71 +350,104 @@ void Firma::vypisKamiony()
 	}
 }
 
-void Firma::vylozeniePalietDoSkladu(Kamion* K) //funguje
+void Firma::vylozeniePalietDoSkladu(Kamion* K) //PREROBIT, ABY KAZDY NOVY KAMION SA ZARADIL DO ZASIELOK, ABY SA NEVYTVARALI 
+//NOVE ZASIELKY AK TAM UZ SU S TAKYM REGIONOM
 {
-	Datum* dnes = new Datum();
-	//toto arraylist lebo tam aj hlavne pristupujem k prvkom
-	ArrayList<int> *pom = new ArrayList<int>(); //v tomto poli su docasne ulozene zatial rozlisene regiony
-	ArrayList<Zasielka*> *zasielky = new ArrayList<Zasielka*>(); //kvoli vyhladaniu na ktorom indexe sa dana zasielka v sklade nachadza,
-	//aby sme jej potom mohli pridat palety, ktore patria pre jej region
-	//toto bude linkedlist lebo tam len pridavam
-	//int pocet;
-	int velkost;
-	int index;
-	//tu nemozem pouzit foreach, lebo na konci jednej otocky vymazem dany kamion z kontajnera aKamiony, takze pri foreach by mi padol program
-	//for (Kamion *K: *aKamiony) { //ohlasene kamiony
-		//if (dnes->budePrvySkor(K->getDatumPrichodu(),dnes->getDnesnyDatum())) { //uz prisiel do skladu
-			//pocet = K->getObsah()->size(); //kolko obsahuje dany kamion paliet
-			//cout << pocet << endl;
-	for (int i = 0; i < K->getObsah()->size(); i++) { //prejdem vsetky jeho palety
-		velkost = pom->size(); //velkost pomocneho pola
-		//cout << velkost << endl;
-		//ak paleta splna podmienky, prida sa do skladu, ak ich nesplna, do skladu sa neprida
-		if (K->getObsah()->operator[](i)->getHmotnost() <= vratMaxNosnost() && !(dnes->budePrvySkor(K->getObsah()->operator[](i)->getDatumDorucenia(), dnes->getDnesnyDatum())) || !(K->getObsah()->operator[](i)->jePrvejTriedy())) {
-			if (velkost == 0) {
-				Zasielka* zasielka = new Zasielka(K->getObsah()->operator[](i)->getRegion());
-				//do kontajnera paliet zasielky pridam zasielku, ktora splna dany region
-				zasielka->getPalety()->add(K->getObsah()->operator[](i)); //danu paletu pridam do zasielky
-				pom->add(K->getObsah()->operator[](i)->getRegion()); //pridam ju do pomocneho pola kvoli rozlisteniu regionu
-				zasielky->add(zasielka);
-				aSklad->add(zasielka); //zaroven ju pridam rovno do skladu
-				//tu asi nemozem deletnut zasielku, lebo si ju zrusim
+	/**
+	if (aSklad->size() == 0) {
+		Datum* dnes = new Datum();
+		//toto arraylist lebo tam aj hlavne pristupujem k prvkom
+		ArrayList<int> *pom = new ArrayList<int>(); //v tomto poli su docasne ulozene zatial rozlisene regiony
+		ArrayList<Zasielka*> *zasielky = new ArrayList<Zasielka*>(); //kvoli vyhladaniu na ktorom indexe sa dana zasielka v sklade nachadza,
+		//aby sme jej potom mohli pridat palety, ktore patria pre jej region
+		//toto bude linkedlist lebo tam len pridavam
+		//int pocet;
+			//AK V SKLADE NIC NIEJE, UROB TUTO VETVU
+		int velkost;
+		int index;
+		//tu nemozem pouzit foreach, lebo na konci jednej otocky vymazem dany kamion z kontajnera aKamiony, takze pri foreach by mi padol program
+		//for (Kamion *K: *aKamiony) { //ohlasene kamiony
+			//if (dnes->budePrvySkor(K->getDatumPrichodu(),dnes->getDnesnyDatum())) { //uz prisiel do skladu
+				//pocet = K->getObsah()->size(); //kolko obsahuje dany kamion paliet
+				//cout << pocet << endl;
+		for (int i = 0; i < K->getObsah()->size(); i++) { //prejdem vsetky jeho palety
+			velkost = pom->size(); //velkost pomocneho pola
+			//cout << velkost << endl;
+			//ak paleta splna podmienky, prida sa do skladu, ak ich nesplna, do skladu sa neprida
+			if (K->getObsah()->operator[](i)->getHmotnost() <= vratMaxNosnost() && !(dnes->budePrvySkor(K->getObsah()->operator[](i)->getDatumDorucenia(), dnes->getDnesnyDatum())) || !(K->getObsah()->operator[](i)->jePrvejTriedy())) {
+				if (velkost == 0) {
+					Zasielka* zasielka = new Zasielka(K->getObsah()->operator[](i)->getRegion());
+					//do kontajnera paliet zasielky pridam zasielku, ktora splna dany region
+					zasielka->getPalety()->add(K->getObsah()->operator[](i)); //danu paletu pridam do zasielky
+					pom->add(K->getObsah()->operator[](i)->getRegion()); //pridam ju do pomocneho pola kvoli rozliseniu regionu
+					zasielky->add(zasielka);
+					aSklad->add(zasielka); //zaroven ju pridam rovno do skladu
+					//tu nemozem deletnut zasielku, lebo si ju zrusim
+				}
+				else { //ak sa uz v pomocnom poli nachadzaju zasielky, teda je rozliseny nejaky region
+					for (int j = 0; j < velkost; j++) { //prejdi vsetky regiony
+						//ak sa nasla paleta, ktora ma odlisny region
+						//cout << "region pom: " << pom->operator[](j)->getRegion() << endl;
+						//cout << "region palety: " << K->getObsah()->operator[](i)->getRegion() << endl;
+						//ak taky region este nenasiel - teda nenachadza sa este v poli pre regiony 
+						if ((K->getObsah()->operator[](i)->getRegion() != pom->operator[](j)) && pom->getIndexOf(K->getObsah()->operator[](i)->getRegion()) == -1) {
+							Zasielka* zasielka1 = new Zasielka(K->getObsah()->operator[](i)->getRegion());
+							zasielka1->getPalety()->add(K->getObsah()->operator[](i));
+							pom->add(K->getObsah()->operator[](i)->getRegion()); //pridam ju do pomocneho pola, teda pribudne novy region
+							zasielky->add(zasielka1);
+							aSklad->add(zasielka1); //zaroven ju pridam rovno do skladu
+							break;
+						}
+						else if (K->getObsah()->operator[](i)->getRegion() == pom->operator[](j) && pom->getIndexOf(K->getObsah()->operator[](i)->getRegion()) != -1) {
+							//pom->operator[](j)->getPalety()->add(K->getObsah()->operator[](i)); //pridam len palety danej 
+							//existujucej zasielke, ktora sa nachazda v pomocnom poli a aj v sklade
+							index = aSklad->getIndexOf(zasielky->operator[](j));
+							aSklad->operator[](index)->getPalety()->add(K->getObsah()->operator[](i));
+							//aSklad->insert(pom->operator[](j)->getPalety()->add(K->getObsah()->operator[](i)),aSklad->getIndexOf(pom->operator[](j)));
+						}
+
+					}
+				}
+				//Zasielka* zasielka = new Zasielka(K->getObsah()->operator[](i)->getRegion()); //oznac region palety za region zasielky
+				//zasielka->getPalety()->add(K->getObsah()->operator[](i)); //pridaj tuto paletu do pola paliet tejto zasielkz s danym reg.
+				//aSklad->add(zasielka);
 			}
-			else { //ak sa uz v pomocnom poli nachadzaju zasielky, teda je rozliseny nejaky region
-				for (int j = 0; j < velkost; j++) { //prejdi vsetky regiony
-					//ak sa nasla paleta, ktora ma odlisny region
-					//cout << "region pom: " << pom->operator[](j)->getRegion() << endl;
-					//cout << "region palety: " << K->getObsah()->operator[](i)->getRegion() << endl;
-					//ak taky region este nenasiel - teda nenachadza sa este v poli pre regiony 
-					if ((K->getObsah()->operator[](i)->getRegion() != pom->operator[](j)) && pom->getIndexOf(K->getObsah()->operator[](i)->getRegion()) == -1) {
-						Zasielka* zasielka1 = new Zasielka(K->getObsah()->operator[](i)->getRegion());
-						zasielka1->getPalety()->add(K->getObsah()->operator[](i));
-						pom->add(K->getObsah()->operator[](i)->getRegion()); //pridam ju do pomocneho pola, teda pribudne novy region
-						zasielky->add(zasielka1);
-						aSklad->add(zasielka1); //zaroven ju pridam rovno do skladu
+		}
+		//}
+	//}
+		delete dnes;
+		delete pom;
+		delete zasielky;
+	}
+	else {
+		*/
+		//AK V UZ SU V SKLADE NEJAKE ZASIELKY, UROB TUTO VETVU: 
+		Datum* dnes = new Datum();
+		for (Paleta* p : *K->getObsah()) {
+			bool zaradena = false;
+			if (p->getHmotnost() <= vratMaxNosnost() && !(dnes->budePrvySkor(p->getDatumDorucenia(), dnes->getDnesnyDatum())) || !(p->jePrvejTriedy())) {
+				for (Zasielka* z : *aSklad) {
+					if (p->getRegion() == z->getRegion()) {
+						//zarad paletu do danej zasielky
+						z->getPalety()->add(p);
+						//oznac paletu ako zaradenu
+						zaradena = true;
 						break;
 					}
-					else if (K->getObsah()->operator[](i)->getRegion() == pom->operator[](j) && pom->getIndexOf(K->getObsah()->operator[](i)->getRegion()) != -1) {
-						//pom->operator[](j)->getPalety()->add(K->getObsah()->operator[](i)); //pridam len palety danej 
-						//existujucej zasielke, ktora sa nachazda v pomocnom poli a aj v sklade
-						index = aSklad->getIndexOf(zasielky->operator[](j));
-						aSklad->operator[](index)->getPalety()->add(K->getObsah()->operator[](i));
-						//aSklad->insert(pom->operator[](j)->getPalety()->add(K->getObsah()->operator[](i)),aSklad->getIndexOf(pom->operator[](j)));
-					}
-
+				}
+				//if paleta nieje zaradena
+				if (zaradena == false) {
+					//vytvor novu zasielku
+					Zasielka* zasielka = new Zasielka(p->getRegion());
+					//zarad ju tam
+					zasielka->getPalety()->add(p);
+					aSklad->add(zasielka);
 				}
 			}
-			//Zasielka* zasielka = new Zasielka(K->getObsah()->operator[](i)->getRegion()); //oznac region palety za region zasielky
-			//zasielka->getPalety()->add(K->getObsah()->operator[](i)); //pridaj tuto paletu do pola paliet tejto zasielkz s danym reg.
-			//aSklad->add(zasielka);
 		}
+		delete dnes;
 	}
-	//}
 //}
-	delete dnes;
-	delete pom;
-	delete zasielky;
-}
 
 void Firma::vypisSklad()
 {
@@ -324,98 +474,39 @@ double Firma::vratMaxNosnost()
 }
 
 
-void Firma::naplnenieVozidiel(string datum)
+void Firma::naplnenieVozidiel(string datum) //ESTE DAT VOZIDLU ATRIBUT CI JE NA CESTE,
+//TYM UROBIM VLASTNE TO ABY SOM NEMUSELA VYMAZAT CELE VOZIDLO Z ROZVAZAJUCIH VOZIDIEL
 {
-	//etst
-	/**int j = 0;
-	for (int i = 0; i < aMozuRozvazat->size(); i++) { //prejdi prior.front, cize na zaciatku bude vozidlo s najmensim opotrebenim
-		while (j < aSklad->size()) { //prejdi sklad
-			aMozuRozvazat->peek(i)->setRegion(aSklad->operator[](j)->getRegion());
-			j++;
-
-		}
-
-
-
-	}
-	//v metode, kde sa bude vozidlo vracat a znova pridavat do prior.frontu treba zavolat resetRegion a to nastavi region na 0
-	//ak mam zasielok viac ako vozidiel, je jasne, ze niektore zasielky neroznesiem, lebo jedno vozidlo ide len do jedneho regionu
-	//kedze jedna zasielka predstavuje jeden region
-	//ak ich mam teda viac, tak si ulozim do nejakej premennej kolku otocku idem a ak je to pocetZasielok
-
-	//aby do kazdeho regionu islo nejake auto, ak je aut dostatok
-	//ak aut dostatok nie je, zasielky sa prerozdelia, tak ako "nasleduju za sebou"
-	//ak mi na konci zostanu volne kapacity v autach alebo volne auta, tak sa to prerozdeli podla regionov
-	//tymto sposobom aj zabranim tomu, aby jedno vozidlo malo viac regionov
-	for (Zasielka *Z : *aSklad) { //prejdi sklad, kazda zasielka prezentuje iny region
-		for (int i = 0 ; i < aMozuRozvazat->size(); i++) { //prejdi prioritny front
-			//ak sa tam zmestia vsetky palety a nema este nastaveny region
-			if (Z->spocitajHmotnosti() <= aMozuRozvazat->peek(i)->getNosnost() && aMozuRozvazat->peek(i)->getRegion() == 0) {
-				aMozuRozvazat->peek(i)->setRegion(Z->getRegion()); //autu poviem, ze ides do regionu tejto zasielky
-
-			}
-			else if (Z->spocitajHmotnosti() > aMozuRozvazat->peek(i)->getNosnost() && aMozuRozvazat->peek(i)->getRegion() == 0) {
-
-
-			}
-		}
-	}
-	//nastavenie regionu
-	//v pripade, ze sa pre dane vozidlo najde zasielka, ktora sa do neho zmesti cela, oznacim ho, ze pojde do daneho regionu rozniest
-	//danu zasielku
-	//ak pre nejake vozidlo nenajdem takuto zasielku, priradim mu hocijaku
-	for (int i = 0; i < aMozuRozvazat->size(); i++) { //prejdi prior.front, cize na zaciatku bude vozidlo s najmensim opotrebenim
-		for (Zasielka *Z : *aSklad) {
-			if (Z->spocitajHmotnosti() <= aMozuRozvazat->peek(i)->getNosnost()) {
-				aMozuRozvazat->peek(i)->setRegion(Z->getRegion());
-			}
-		}
-	}
-
-	double celkovaNosnost = 0;
-	for (Vozidlo *v : *aEvidenciaVozidiel) {
-		if (v->getOpotrebovanie() <= 90) {
-			celkovaNosnost += v->getNosnost();
-		}
-	}
-	*/
 	//ak zasielok t.j regionov je viac ako vozidiel, hned je jasne, ze sa nemozu nalozit vsetky palety
-	//bool koniecCyklu = false;
 	bool mozuSaNalozit = true;
-	this->sortPodlaOpotrebovanosti(); //tu zoradi vozidla podla opotrebovanosti
+	//this->sortPodlaOpotrebovanosti(); //tu zoradi vozidla podla opotrebovanosti
+	//ak sa nemozu nalozit z dovodu, ze je viac regionov ako vozidiel
 	if (aSklad->size() > aRozvazajuceVozidla->size()) mozuSaNalozit = false;
-	//inak skontroluj ci sa mozu nalozit vsetky
-	else {
-		for (Vozidlo* v : *aRozvazajuceVozidla) {
+	//inak skontroluj ci sa podla zadanych pravidiel daju nalozit vsetky palety
+	//najskor sa vytvori pomocny arraylist, do ktoreho sa pridaju vozidla z prioritneho frontu
+	ArrayList <Vozidlo*> *pom = new ArrayList<Vozidlo*>();
+	int pocet = aRozvazajuceVozidla->size();
+	for (int i = 0; i < pocet; i++) {
+		pom->add(aRozvazajuceVozidla->pop()); //tu budu zotriedene podla opotrebovanosti
+	}
+	//ArrayList<Vozidlo*> *druhyPom = dynamic_cast<ArrayList<Vozidlo*>*>(pom->clone()); //tu si urobim jeho kopiu a tu poslem do 
+	//metody nemozuSaNalozit()
+	if (mozuSaNalozit) {
+		for (Vozidlo* v : *pom) {
+			cout << "SPZ: " << v->getSPZ() << ", nosnost: " << v->getNosnost() << ", opotrebovanie: " << v->getOpotrebovanie();
 			for (Zasielka* z : *aSklad) {
 				for (Paleta* p : *z->getPalety()) {
-					if (!(p->jeNalozena())) {
-						if (p->getHmotnost() + v->getNalozene() <= v->getNosnost()) {
-							if (v->getRegion() == 0) v->setRegion(p->getRegion());
-							if (v->getRegion() == p->getRegion()) {
-								v->setNalozene(p->getHmotnost());
-								p->setNalozena(true);
-								//if (v->mozemPridatPaletu(p) == false) { //ked sa najde co i len jedna paleta, ktora sa neda nalozit
-									//mozuSaNalozit = false;
-									//p->setNalozena(false);
-									//koniecCyklu = true;
-									//break;
-							}
-						}
-					}
-					//if (koniecCyklu) break;
-					//p->setNalozena(false);
+					v->mozemPridatPaletu(p);
 				}
-				//if (koniecCyklu) break;
 			}
 		}
-
-		//VYRESETOVANIE
-		for (Vozidlo* v : *aRozvazajuceVozidla)
+		//VYRESETOVANIE - kvoli metode mozemPridatPaletu()
+		for (Vozidlo* v : *pom)
 		{
 			v->vynulujKolkoJeNalozene();
 			v->resetRegion();
 		}
+		//ZISTENIE, CI SA DALI PRIDAT VSETKY PALETY
 		int pocetNalozenych = 0;
 		int pocetPaliet = 0;
 		for (Zasielka* z : *aSklad) {
@@ -425,94 +516,38 @@ void Firma::naplnenieVozidiel(string datum)
 				p->setNalozena(false);
 			}
 		}
-		if (pocetNalozenych < pocetPaliet) mozuSaNalozit = false; //ak sa stane, ze co i len jedna paleta nebola nalozena, hned false
+		//ak sa stane, ze co i len jedna paleta nebola nalozena, hned false
+		if (pocetNalozenych < pocetPaliet) mozuSaNalozit = false;
 
 		//ak sa mozu nalozit, naloz ich
 		if (mozuSaNalozit) {
 			cout << "mozu sa nalozit" << endl;
-			for (Vozidlo* v : *aRozvazajuceVozidla) {
+			for (Vozidlo* v : *pom) {
 				for (Zasielka* z : *aSklad) {
 					for (Paleta* p : *z->getPalety()) {
-						if (!(p->jeNalozena())) {
-							if (p->getHmotnost() + v->getNalozene() <= v->getNosnost()) {
-								if (v->getRegion() == 0) v->setRegion(p->getRegion());
-								if (v->getRegion() == p->getRegion()) {
-									v->getPalety()->push(p);
-									v->setNalozene(p->getHmotnost());
-									p->setNalozena(true);
-								}
-							}
-						}
+						v->pridajPaletu(p);
 					}
 				}
+				v->setJeNaCeste(true);
 			}
-		}
-		//ak sa nemozu nalozit
-		else {
-			cout << "nemozu sa nalozit" << endl;
-			ArrayList<Paleta*> *prvejTriedy = new ArrayList<Paleta*>(5);
-			ArrayList<Paleta*> *ostatne = new ArrayList<Paleta*>(5);
-			//roztriedenie
+			/**
+			//NA VYMAZAVANI TO PADA!!!!!!!!!!!!!!
 			for (Zasielka* z : *aSklad) {
 				for (Paleta* p : *z->getPalety()) {
-					if (p->jePrvejTriedy() && p->getDatumDorucenia() == datum) prvejTriedy->add(p);
-					else ostatne->add(p);
-				}
-			}
-			this->sortPodlaHmotnosti(prvejTriedy); //tu zotriedi palety podla hmotnosti
-			for (Vozidlo* v : *aRozvazajuceVozidla) {
-				for (Paleta* p : *prvejTriedy) {
-					if (!(p->jeNalozena())) {
-						if (p->getHmotnost() + v->getNalozene() <= v->getNosnost()) {
-							if (v->getRegion() == 0) v->setRegion(p->getRegion());
-							if (v->getRegion() == p->getRegion()) {
-								v->getPalety()->push(p);
-								v->setNalozene(p->getHmotnost());
-								p->setNalozena(true);
-							}
-						}
-					}
-				}
-			}
-			//oznacia sa ako nezrealizovane 
-			for (Paleta* p : *prvejTriedy) {
-				if (!(p->jeNalozena())) {
-					p->setZrealizovana(false);
-					cout << "Nezrealizovana: " << p->getHmotnost() << endl;
-				}
-			}
-			//prejdem vsetky auta a ak nejake maju volne kapacity, nalozim zvysne palety
-			if (ostatne->size() > 0) { //ak vobec mam nejake ostatne palety
-				this->sortPodlaDatumu(ostatne);
-				for (Vozidlo* v : *aRozvazajuceVozidla) {
-					for (Paleta* p : *ostatne) {
-						if (!(p->jeNalozena())) {
-							if (p->getHmotnost() + v->getNalozene() <= v->getNosnost()) {
-								if (v->getRegion() == 0) v->setRegion(p->getRegion());
-								if (v->getRegion() == p->getRegion()) {
-									v->getPalety()->push(p);
-									v->setNalozene(p->getHmotnost());
-									p->setNalozena(true);
-								}
-							}
-						}
-					}
-				}
-			}
-			//vymazem zo skladu nalozene a nezrealizovane palety
-			//TU TO PADA KVOLI VYMAZAVANIU 
-			//TOTO ESTE VYRIESIT
-			/**
-			for (Zasielka* z : *aSklad) {
-				int pocet = z->getPalety()->size();
-				for (int i = 0; i <= pocet; i++) {
-					if (z->getPalety()->operator[](i)->jeNalozena() || !(z->getPalety()->operator[](i)->jeZrealizovana())) z->getPalety()->removeAt(i++);
+					if (p->jeNalozena()) z->getPalety()->tryRemove(p);
 				}
 			}
 			*/
-			delete prvejTriedy;
-			delete ostatne;
+			for (Vozidlo* v : *pom) { //ak nejake vozidlo zostalo prazdne, hod ho spat do prioritneho frontu vozidiel, kt mozu rozvazat
+				if (v->jeNaCeste() == false) aRozvazajuceVozidla->push(v->getOpotrebovanie(), v);
+			}
+			delete pom; //tu sa vymaze pomocne pole, lebo uz ho nepotrebujem, lebo nejdem do vetvy nemozu sa nalozit 
 		}
+		//ak sa nemozu nalozit, pretoze sa nedaju nalozit rovno podla zadanych pravidiel, t.j vozidla su zoradene podla opotrebovanosti,
+		//kazde ide iba do jedneho regionu a palety nesmu prekrocit nosnost vozidla
+		else this->nemozuSaNalozitVsetky(datum, pom);
 	}
+	//ak sa nemozu nalozit z dovodu, ze je viac regionov ako vozidiel
+	else this->nemozuSaNalozitVsetky(datum, pom);
 }
 

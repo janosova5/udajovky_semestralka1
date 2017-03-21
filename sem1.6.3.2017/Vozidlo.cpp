@@ -1,6 +1,10 @@
 #include "Vozidlo.h"
 
 
+Vozidlo::Vozidlo()
+{
+}
+
 Vozidlo::Vozidlo(string paSPZ, double paNosnost, string paDatum)
 {
 	aSPZ = paSPZ;
@@ -9,6 +13,7 @@ Vozidlo::Vozidlo(string paSPZ, double paNosnost, string paDatum)
 	aRegion = 0;
 	aDatumZaradenia = paDatum;
 	aKolkoJeNalozene = 0.0;
+	aJeNaCeste = false;
 	aPalety = new ExplicitStack<Paleta*>();
 }
 
@@ -68,7 +73,7 @@ void Vozidlo::setRegion(int paRegion)
 	aRegion = paRegion;
 }
 
-bool Vozidlo::pridajPaletu(Paleta * paleta)
+void Vozidlo::pridajPaletu(Paleta * paleta)
 {
 	/**
 	if (!(paleta->jeNalozena())) {
@@ -88,19 +93,15 @@ bool Vozidlo::pridajPaletu(Paleta * paleta)
 		if (paleta->getHmotnost() + aKolkoJeNalozene <= this->getNosnost()) {
 			if (aRegion == 0) this->setRegion(paleta->getRegion());
 			if (this->aRegion == paleta->getRegion()) {
-
 				aPalety->push(paleta);
 				aKolkoJeNalozene += paleta->getHmotnost();
 				paleta->setNalozena(true);
-				return true;
 			}
 		}
-		else return false;
 	}
-	else return true;
 }
 
-bool Vozidlo::mozemPridatPaletu(Paleta * paleta)
+void Vozidlo::mozemPridatPaletu(Paleta * paleta)
 {
 	if (!(paleta->jeNalozena())) {
 		if (paleta->getHmotnost() + aKolkoJeNalozene <= this->getNosnost()) {
@@ -108,11 +109,9 @@ bool Vozidlo::mozemPridatPaletu(Paleta * paleta)
 				if (this->aRegion == paleta->getRegion()) {
 					aKolkoJeNalozene += paleta->getHmotnost();
 					paleta->setNalozena(true);
-					return true;
-				}
-		} else return false;
+				}	
+		} 
 	}
-	else return true;
 }
 
 void Vozidlo::vynulujKolkoJeNalozene()
@@ -134,5 +133,16 @@ void Vozidlo::setNalozene(double hmotnost)
 {
 	aKolkoJeNalozene += hmotnost;
 }
+
+void Vozidlo::setJeNaCeste(bool je)
+{
+	aJeNaCeste = je;
+}
+
+bool Vozidlo::jeNaCeste()
+{
+	return aJeNaCeste;
+}
+
 
 

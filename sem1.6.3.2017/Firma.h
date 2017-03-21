@@ -22,7 +22,7 @@ class Firma
 {
 private:
 	ArrayList<Vozidlo*> *aEvidenciaVozidiel; //tu iba budu uchovane vsetky vozidla, ktore ma firma k dispo
-	ArrayList<Vozidlo*> *aRozvazajuceVozidla; //sem budem davat vozidla, ked s nimi budem pracovat a vyberat ich podla opotrebovanosti
+	PriorityQueue_Heap<Vozidlo*> *aRozvazajuceVozidla; //sem budem davat vozidla, ked s nimi budem pracovat a vyberat ich podla opotrebovanosti
 	LinkedList<Vozidlo*> *aVyradeneVozidla; //kedm i pojde explicit queue dam ten
 	ArrayList<Zasielka*> *aSklad;
 	ArrayList<Dodavatel*> *aDodavatelia; //toto bude arraylist
@@ -49,10 +49,14 @@ public:
 	double vratMaxNosnost();
 	void naplnenieVozidiel(string paDatum);
 	void otestujPrioritnyFront1();
-	void skontrolujOpotrebovanie();
+	//void skontrolujOpotrebovanie();
 	void vypisPaletyZVozidiel();
-	void sortPodlaOpotrebovanosti();
+	//void sortPodlaOpotrebovanosti();
 	void sortPodlaHmotnosti(ArrayList<Paleta*> *prvejTriedy);
 	void sortPodlaDatumu(ArrayList<Paleta*> *ostatne);
+	void nemozuSaNalozitVsetky(string paDatum, ArrayList<Vozidlo*> *vozidla);
+	void vylozenieVozidla(Vozidlo *vozidlo); //funkcionalita 8 
+	double randBetween0and1();
+
 };
 
