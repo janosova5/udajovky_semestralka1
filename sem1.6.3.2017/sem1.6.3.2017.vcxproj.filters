@@ -99,6 +99,9 @@
     <ClInclude Include="Queue.h">
       <Filter>Header Files\DS</Filter>
     </ClInclude>
+    <ClInclude Include="ExplicitQueue.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dodavatel.cpp">

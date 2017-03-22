@@ -17,6 +17,7 @@ private:
 	string aDatumZaradenia;
 	double aKolkoJeNalozene;
 	bool aJeNaCeste;
+	bool aJeVyradene;
 	ExplicitStack<Paleta*> *aPalety;
 
 public:
@@ -34,7 +35,7 @@ public:
 	void setNosnost(double paNosnost);
 	void zvysOpotrebovanie(int paRegion);
 	void setRegion(int paRegion);
-	void pridajPaletu(Paleta *paleta);
+	bool pridajPaletu(Paleta *paleta);
 	void mozemPridatPaletu(Paleta *paleta);
 	void vynulujKolkoJeNalozene();
 	void resetRegion();
@@ -42,6 +43,8 @@ public:
 	void setNalozene(double hmotnost);
 	void setJeNaCeste(bool je);
 	bool jeNaCeste();
+	bool jeVyradene();
+	void setJeVyradene(bool je);
 };
 
 inline bool operator ==(Vozidlo a, Vozidlo b)

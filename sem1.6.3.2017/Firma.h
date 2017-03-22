@@ -15,21 +15,20 @@ using namespace std;
 using DS::ArrayList;
 using DS::LinkedList;
 using DS::PriorityQueue_Heap;
-//using DS::ExplicitQueue;
-//using DS::ImplicitQueue;
+using DS::ExplicitQueue;
 
 class Firma
 {
 private:
 	ArrayList<Vozidlo*> *aEvidenciaVozidiel; //tu iba budu uchovane vsetky vozidla, ktore ma firma k dispo
 	PriorityQueue_Heap<Vozidlo*> *aRozvazajuceVozidla; //sem budem davat vozidla, ked s nimi budem pracovat a vyberat ich podla opotrebovanosti
-	LinkedList<Vozidlo*> *aVyradeneVozidla; //kedm i pojde explicit queue dam ten
+	ExplicitQueue<Vozidlo*> *aVyradeneVozidla; 
 	ArrayList<Zasielka*> *aSklad;
-	ArrayList<Dodavatel*> *aDodavatelia; //toto bude arraylist
-	LinkedList<Kamion*> *aKamiony; //mozno to nejde lebo nemam deklarovane v kontruktore new array list pre kamiony, skusim to este tak
-	//uz to ide, problem bol asi to, ze som naplnala kamion v metode, kde som si sice vratila kamion ale vratila som ho ako smernik
-	//a lokalnu premennu nemozem vracat ako smernik lebo mi zanikne
+	ArrayList<Dodavatel*> *aDodavatelia; 
+	LinkedList<Kamion*> *aKamiony; 
 	ArrayList<Paleta*> *aNezrealizovane;
+	ArrayList<Paleta*> *aNeprevzate;
+	LinkedList<Paleta*> *aNezaevidovaliSaDoSkladu; //lebo tam len pridavam
 
 public:
 	Firma();
@@ -38,16 +37,13 @@ public:
 	bool pridajNovehoDodavatela(Dodavatel* dodavatel);
 	void vypisDodavatelov();
 	void otestujPrioritnyFront(int o);
-	void vypis();
 	void vypisVozidlaPodlaDatumu();
-	//Kamion* naplnKamion1(string paDatum); //toto potom budem robit niekde inde, teraz len testujem metodu 5
-	//Kamion& naplnKamion2(string paDatum);
 	void ohlasKamion(Kamion* paKamion); //5
 	void vypisKamiony(); //na otestovanie metody 5
 	void vylozeniePalietDoSkladu(Kamion* paKamion); //6
 	void vypisSklad(); //otestovanie 6
 	double vratMaxNosnost();
-	void naplnenieVozidiel(string paDatum);
+	void naplnenieVozidiel(string paDatum); //7
 	void otestujPrioritnyFront1();
 	//void skontrolujOpotrebovanie();
 	void vypisPaletyZVozidiel();
@@ -55,8 +51,16 @@ public:
 	void sortPodlaHmotnosti(ArrayList<Paleta*> *prvejTriedy);
 	void sortPodlaDatumu(ArrayList<Paleta*> *ostatne);
 	void nemozuSaNalozitVsetky(string paDatum, ArrayList<Vozidlo*> *vozidla);
-	void vylozenieVozidla(Vozidlo *vozidlo); //funkcionalita 8 
+	void vylozenieVozidla(Vozidlo *vozidlo, string datum); //funkcionalita 8 
 	double randBetween0and1();
+	void navratVozidla(Vozidlo *vozidlo); //funkcionalita 9
+	void vyradenieVozidielZevidencie();
+	void vymazanieDodavatela(Dodavatel* dod);
+	void vypisNezrealizovanePalety(string datumOd, string datumDo); //funkcionalita 13 - funguje
+	void dodavatelSnajvacsimPoctomNeprevzatychPaliet(string datumOd, string datumDo);
+	void ulozDodavatelovDoSuboru();
+	void nacitajDodavatelovZoSuboru();
+	bool uzObsahujeTohtoDodavatela(string nazov); 
 
 };
 

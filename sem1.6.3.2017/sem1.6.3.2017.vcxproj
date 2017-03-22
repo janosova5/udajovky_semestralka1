@@ -147,6 +147,7 @@
     <ClInclude Include="Datum.h" />
     <ClInclude Include="Dodavatel.h" />
     <ClInclude Include="DSRoutines.h" />
+    <ClInclude Include="ExplicitQueue.h" />
     <ClInclude Include="ExplicitStack.h" />
     <ClInclude Include="Firma.h" />
     <ClInclude Include="Iterator.h" />

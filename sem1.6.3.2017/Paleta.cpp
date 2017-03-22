@@ -7,7 +7,7 @@ Paleta::Paleta()
 {
 }
 
-Paleta::Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, string paDatum, Dodavatel *paDodavatel)
+Paleta::Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, string paDatum, Dodavatel *dod)
 {
 	aRegion = paRegion;
 	aHmotnost = paHmotnost;
@@ -17,7 +17,8 @@ Paleta::Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, string paDat
 	aPrevzata = false;
 	aDatumVratenia = "";
 	aDatumPrichodu = "";
-	aDodavatel = paDodavatel;
+	aDatumNeprevzatia = "";
+	aDodavatel = dod;
 	aNalozena = false;
 	if (aPrvejTriedy) {
 		aDatumDorucenia = paDatum;
@@ -26,7 +27,7 @@ Paleta::Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, string paDat
 }
 
 
-Paleta::~Paleta()
+Paleta::~Paleta() //nemoze rusit dodavatela, na toho mam smerniky v arrayliste dodavatelov
 {
 
 }
@@ -61,6 +62,12 @@ bool Paleta::jeNalozena()
 	return aNalozena;
 }
 
+bool Paleta::jeAktualneNaSklade()
+{
+	if (!(this->jeNalozena()) && this->jePrevzata() == false && this->getDatumNeprevzatia() == "" && this->jeZrealizovana() && this->getDatumVratenia() == "") return true;
+	else return false;
+}
+
 string Paleta::getDatumDorucenia()
 {
 	return aDatumDorucenia;
@@ -74,6 +81,11 @@ string Paleta::getDatumVratenia()
 string Paleta::getDatumPrichodu()
 {
 	return aDatumPrichodu;
+}
+
+string Paleta::getDatumNeprevzatia()
+{
+	return aDatumNeprevzatia;
 }
 
 Dodavatel* Paleta::getDodavatel()
@@ -136,4 +148,9 @@ void Paleta::setDodavatel(Dodavatel * paDodavatel)
 void Paleta::setNalozena(bool nalozena)
 {
 	aNalozena = nalozena;
+}
+
+void Paleta::setDatumNeprevzatia(string datum)
+{
+	aDatumNeprevzatia = datum;
 }

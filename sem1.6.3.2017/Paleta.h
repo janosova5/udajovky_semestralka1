@@ -18,10 +18,11 @@ private:
 	string aDatumVratenia;
 	string aDatumPrichodu;
 	bool aNalozena;
-	Dodavatel *aDodavatel; //este toto dokoncit konstruktor a destruktor 
+	string aDatumNeprevzatia;
+	Dodavatel *aDodavatel; 
 public:
 	Paleta();
-	Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, string paDatum, Dodavatel *paDodavatel);
+	Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, string paDatum, Dodavatel *dod);
 	~Paleta();
 	int getRegion();
 	double getHmotnost();
@@ -29,9 +30,11 @@ public:
 	bool jeZrealizovana();
 	bool jePrevzata();
 	bool jeNalozena();
+	bool jeAktualneNaSklade();
 	string getDatumDorucenia();
 	string getDatumVratenia();
 	string getDatumPrichodu();
+	string getDatumNeprevzatia();
 	Dodavatel* getDodavatel();
 	void setRegion(int paRegion);
 	void setHmotnost(double paHmotnost);
@@ -43,6 +46,7 @@ public:
 	void setDatumPrichodu(string paDatumPrichodu);
 	void setDodavatel(Dodavatel *paDodavatel);
 	void setNalozena(bool nalozena);
+	void setDatumNeprevzatia(string datum);
 
 };
 

@@ -200,7 +200,7 @@ namespace DS
 		}
 		aSize--;
 		T data = mazany->getData();
-		//delete mazany; // na tomto to spadne 
+		delete mazany; // na tomto to spadne 
 		return data;
 	}
 

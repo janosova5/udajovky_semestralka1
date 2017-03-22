@@ -63,14 +63,14 @@ namespace DS
 	template<typename T>
 	Structure& ExplicitQueue<T>::operator=(const Structure& other)
 	{
-		*this = dynamic_cast< ExplicitQueue<T>&>(other);
+		*this = dynamic_cast<const ExplicitQueue<T>&>(other);
 		return *this;
 	}
 
 	template<typename T>
 	Queue<T>& ExplicitQueue<T>::operator=(const Queue<T>& other)
 	{
-		*this = dynamic_cast< ExplicitQueue<T>&>(other);
+		*this = dynamic_cast<const ExplicitQueue<T>&>(other);
 		return *this;
 	}
 
@@ -93,7 +93,7 @@ namespace DS
 	template<typename T>
 	bool ExplicitQueue<T>::isEmpty() const
 	{
-		return (size <= 0);
+		return size_ <= 0;
 	}
 
 	template<typename T>
@@ -122,12 +122,12 @@ namespace DS
 	template<typename T>
 	T& ExplicitQueue<T>::peek()
 	{
-		return (*list_)[0]->getData();
+		return (*list_)[0];
 	}
 
 	template<typename T>
 	const T& ExplicitQueue<T>::peek() const
 	{
-		return (*list_)[0]->getData();
+		return (*list_)[0];
 	}
 }
