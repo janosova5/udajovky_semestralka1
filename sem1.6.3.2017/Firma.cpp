@@ -285,7 +285,7 @@ void Firma::vylozenieVozidla(Vozidlo * vozidlo, string datum)
 	if (vozidlo->jeNaCeste()) {
 		int pocet = vozidlo->getPalety()->size();
 		for (int i = 0; i < pocet; i++) {
-			if (this->randBetween0and1() < 0.75) {
+			if (this->randBetween0and1() < 0.15) {
 				Paleta *paleta = vozidlo->getPalety()->pop();
 				paleta->setPrevzata(false);
 				aNeprevzate->add(paleta);
@@ -381,7 +381,7 @@ void Firma::dodavatelSnajvacsimPoctomNeprevzatychPaliet(string datumOd, string d
 			if (datum->jeDatumVIntervale(p->getDatumNeprevzatia(), datumOd, datumDo)) p->getDodavatel()->setMnozstvoNeprevzatych(1);
 		}
 		int max = 0;
-		Dodavatel *dod;
+		Dodavatel *dod = nullptr;
 		for (Dodavatel *d : *aDodavatelia) {
 			if (d->getMnozstvoNeprevzatych() > max) {
 				max = d->getMnozstvoNeprevzatych();

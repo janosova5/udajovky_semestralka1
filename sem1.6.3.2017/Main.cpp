@@ -51,12 +51,12 @@ int main() {
 	Kamion* kamion = new Kamion("01.01.2017");
 	kamion->getObsah()->add(paleta1);
 	kamion->getObsah()->add(paleta2);
-	Paleta* paleta3 = new Paleta(1, 5.2, true, "23.03.2017", dod1);
+	Paleta* paleta3 = new Paleta(1, 5.2, true, "25.04.2017", dod1);
 	cout << paleta3->getDatumDorucenia() << endl;
 	Paleta* paleta4 = new Paleta(1, 19.9, false, "", dod1);
-	Paleta* paleta5 = new Paleta(4, 18.1, true, "23.03.2017", dod3); //poriesit metodu budePrvySkor, aby nedavalo paletu ktora ma dnesny den
-	Paleta* paleta6 = new Paleta(3, 22.1, true, "23.03.2017", dod2);
-	Paleta* paleta7 = new Paleta(2, 15.4, true, "23.03.2017", dod1);
+	Paleta* paleta5 = new Paleta(4, 18.1, true, "28.04.2017", dod3); //poriesit metodu budePrvySkor, aby nedavalo paletu ktora ma dnesny den
+	Paleta* paleta6 = new Paleta(3, 22.1, true, "22.04.2017", dod2);
+	Paleta* paleta7 = new Paleta(2, 15.4, true, "25.04.2017", dod1);
 	Kamion* kamion1 = new Kamion("01.02.2017");
 	kamion1->getObsah()->add(paleta3);
 	kamion1->getObsah()->add(paleta4);
@@ -72,24 +72,24 @@ int main() {
 	//firma->vypisKamiony();
 	firma->vypisSklad();
 	cout << "Naplnenie vozidiel" << endl;
-	firma->naplnenieVozidiel("23.03.2017"); //do tejto metody asi pojde parameter datum, ze ktory den sa ide rozvazat
+	firma->naplnenieVozidiel("23.04.2017"); //do tejto metody asi pojde parameter datum, ze ktory den sa ide rozvazat
 	firma->vypisPaletyZVozidiel();
-	firma->vylozenieVozidla(vozidlo1, "24.03.2017");
-	firma->vylozenieVozidla(vozidlo2, "24.03.2017");
-	firma->vylozenieVozidla(vozidlo3, "24.03.2017");
-	//firma->navratVozidla(vozidlo3);
+	firma->vylozenieVozidla(vozidlo1, "24.04.2017");
+	firma->vylozenieVozidla(vozidlo2, "24.04.2017");
+	firma->vylozenieVozidla(vozidlo3, "24.04.2017");
+	firma->navratVozidla(vozidlo3);
 	cout << "palety vo vozidlach - kontrola: " << endl;
 	firma->vypisPaletyZVozidiel();
 	cout << "kontrola vyradenia: " << endl;
-	//firma->vyradenieVozidielZevidencie();
-	//firma->vypisVozidlaPodlaDatumu();
+	firma->vyradenieVozidielZevidencie();
+	firma->vypisVozidlaPodlaDatumu();
 	//firma->vypisSklad();
 	//firma->otestujPrioritnyFront1();
 	//firma->vypisKamiony();
 	double cislo = firma->randBetween0and1();
 	cout << "Cislo: "  << cislo << endl;
-	firma->vypisNezrealizovanePalety("20.03.2017", "25.03.2017");
-	firma->dodavatelSnajvacsimPoctomNeprevzatychPaliet("20.03.2017", "25.03.2017");
+	firma->vypisNezrealizovanePalety("20.04.2017", "25.04.2017");
+	firma->dodavatelSnajvacsimPoctomNeprevzatychPaliet("20.04.2017", "25.04.2017");
 	firma->vypisSklad();
 	//firma->vymazanieDodavatela(dod2);
 	//firma->vypisDodavatelov();
