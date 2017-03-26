@@ -102,6 +102,9 @@
     <ClInclude Include="ExplicitQueue.h">
       <Filter>Header Files\DS</Filter>
     </ClInclude>
+    <ClInclude Include="heap_monitor.h">
+      <Filter>Header Files\DS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dodavatel.cpp">

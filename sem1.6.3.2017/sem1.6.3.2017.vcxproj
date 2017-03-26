@@ -150,6 +150,7 @@
     <ClInclude Include="ExplicitQueue.h" />
     <ClInclude Include="ExplicitStack.h" />
     <ClInclude Include="Firma.h" />
+    <ClInclude Include="heap_monitor.h" />
     <ClInclude Include="Iterator.h" />
     <ClInclude Include="Kamion.h" />
     <ClInclude Include="LinkedList.h" />

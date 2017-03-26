@@ -135,46 +135,4 @@ namespace DS
 	}
 #pragma endregion PriorityItem
 
-
-
-#pragma region PriorityItem1
-	template<typename T>
-	class PriorityItem1 :
-		public DataItem<T>
-	{
-	public:
-		PriorityItem1(const double priority, const T& data);
-		PriorityItem1(const PriorityItem1<T>& other);
-		virtual ~PriorityItem1();
-		const double getPriority() const;
-	private:
-		double priority_;
-	};
-
-	template<typename T>
-	PriorityItem1<T>::PriorityItem1(const double priority, const T& data) :
-		DataItem<T>(data),
-		priority_(priority)
-	{
-	}
-
-	template<typename T>
-	PriorityItem1<T>::PriorityItem1(const PriorityItem1<T>& other) :
-		DataItem<T>(other),
-		priority_(other.priority_)
-	{
-	}
-
-	template<typename T>
-	PriorityItem1<T>::~PriorityItem1()
-	{
-	}
-
-	template<typename T>
-	const double PriorityItem1<T>::getPriority() const
-	{
-		return priority_;
-	}
-#pragma endregion PriorityItem1
-
 }

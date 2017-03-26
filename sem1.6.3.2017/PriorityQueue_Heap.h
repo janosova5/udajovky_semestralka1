@@ -16,7 +16,6 @@ namespace DS {
 		PriorityQueue_Heap<T>& operator=(const PriorityQueue_Heap<T>& other);
 
 		void push(const int priority, const T& data) override;
-		void push(const double priority, const T& data) override;
 		T pop() override;
 	protected:
 		int indexOfHighestPriority() const override;
@@ -111,18 +110,5 @@ namespace DS {
 		return 0;
 	}
 
-	template<typename T>
-	void PriorityQueue_Heap<T>::push(const double priority, const T& data) {
-
-		PriorityItem<T>* newItem = new PriorityItem<T>(priority, data);
-		list_->add(newItem);
-		int curIndex = list_->size() - 1;
-		int parentIndex = getParentIndex(curIndex);
-		while (parentIndex >= 0 && (*list_)[parentIndex]->getPriority() > (*list_)[curIndex]->getPriority()) {
-			DSRoutines::swap<PriorityItem<T>*>((*list_)[parentIndex], (*list_)[curIndex]);
-			curIndex = parentIndex;
-			parentIndex = getParentIndex(curIndex);
-		}
-	}
 
 }

@@ -10,7 +10,7 @@ class Paleta
 {
 private:
 	int aRegion;
-	double aHmotnost;
+	int aHmotnost;
 	bool aPrvejTriedy;
 	string aDatumDorucenia;
 	bool aZrealizovana;
@@ -22,10 +22,10 @@ private:
 	Dodavatel *aDodavatel; 
 public:
 	Paleta();
-	Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, string paDatum, Dodavatel *dod);
+	Paleta(int paRegion, int paHmotnost, bool paPrvejTriedy, string paDatum, Dodavatel *dod);
 	~Paleta();
 	int getRegion();
-	double getHmotnost();
+	int getHmotnost();
 	bool jePrvejTriedy();
 	bool jeZrealizovana();
 	bool jePrevzata();
@@ -37,7 +37,7 @@ public:
 	string getDatumNeprevzatia();
 	Dodavatel* getDodavatel();
 	void setRegion(int paRegion);
-	void setHmotnost(double paHmotnost);
+	void setHmotnost(int paHmotnost);
 	void setPrvejTriedy(bool paPrvejTriedy);
 	void setDatumDorucenia(string paDatumDorucenia);
 	void setZrealizovana(bool paZrealizovana);

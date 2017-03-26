@@ -1,98 +1,234 @@
 #include "Firma.h"
 #include "Datum.h"
+#include "heap_monitor.h"
 
-
-int main() {
-	Firma *firma = new Firma();
-	/**string paSPZ;
-	cout << "Zadajte SPZ vozidla" << endl;
-	cin >> paSPZ;
-	double paNosnost;
-	cout << "Zadajte nosnost vozidla" << endl;
-	cin >> paNosnost;
-	string paDatum;
-	cout << "Zadajte datum zaradenia vozidla vo formate: dd.mm.yyyy" << endl;
-	cin >> paDatum;
-	*/
-	Datum *datum = new Datum();
-	cout << datum->getDnesnyDatum() << endl;
-	cout << datum->budePrvySkor("15.03.2017", datum->getDnesnyDatum()) << endl;
-	Vozidlo* vozidlo1 = new Vozidlo("abcd123", 20.6, "05.05.2015");
-	Vozidlo* vozidlo2 = new Vozidlo("efgh123", 27.6, "25.05.2016");
-	Vozidlo* vozidlo3 = new Vozidlo("ijkl123", 21.6, "04.01.2017");
+void vlozData(Firma *firma) {
+	Vozidlo* vozidlo1 = new Vozidlo("abcd123", 20.5, "05.05.2016");
+	Vozidlo* vozidlo2 = new Vozidlo("efgh456", 27.6, "25.05.2015");
+	Vozidlo* vozidlo3 = new Vozidlo("ijkl789", 21.2, "04.01.2016");
+	Vozidlo* vozidlo4 = new Vozidlo("mnop100", 33.5, "13.03.2017");
+	Vozidlo* vozidlo5 = new Vozidlo("rstu123", 37.3, "21.02.2017");
+	//1
 	firma->pridajNoveVozidlo(vozidlo1);
 	firma->pridajNoveVozidlo(vozidlo2);
 	firma->pridajNoveVozidlo(vozidlo3);
-	cout << "max nosnost: " << firma->vratMaxNosnost() << endl;
-	//firma->pridajNoveVozidlo();
-	//firma->pridajNoveVozidlo();
-	//firma->otestujPrioritnyFront(10);
-	//firma->otestujPrioritnyFront(15);
-	//firma->vypis();
-	firma->vypisVozidlaPodlaDatumu();
-	//firma->pridajNovehoDodavatela();
-	//firma->pridajNovehoDodavatela();
-	//firma->pridajNovehoDodavatela();
-	//firma->vypisDodavatelov();
-	//firma->ohlasKamion(firma->naplnKamion1("01.01.2017"));
-	//firma->ohlasKamion(firma->naplnKamion2("01.02.2017"));
-	Dodavatel *dod1 = new Dodavatel("Lidl", "Vysokoskolakov15-Zilina"); //tento dodavatel pojde z pola dodavatelov,cize toho nedeletujem
+	firma->pridajNoveVozidlo(vozidlo4);
+	firma->pridajNoveVozidlo(vozidlo5);
+	//2
+	Dodavatel *dod1 = new Dodavatel("Lidl", "Vysokoskolakov15-Zilina");
 	Dodavatel *dod2 = new Dodavatel("Tesco", "Vlcince38-Namestovo");
+	Dodavatel *dod3 = new Dodavatel("Billa", "Sandricka25-Nitra");
+	Dodavatel *dod4 = new Dodavatel("Kaufland", "Majova823-Trencin");
+	Dodavatel *dod5 = new Dodavatel("CBA", "Dolna19-Kosice");
 	firma->pridajNovehoDodavatela(dod1);
 	firma->pridajNovehoDodavatela(dod2);
-	firma->ulozDodavatelovDoSuboru();
-	//firma->nacitajDodavatelovZoSuboru();
-	Dodavatel *dod3 = new Dodavatel("Billa", "Sandricka25-Nitra");
 	firma->pridajNovehoDodavatela(dod3);
-	firma->ulozDodavatelovDoSuboru();
-	firma->nacitajDodavatelovZoSuboru();
-	Paleta* paleta1 = new Paleta(1, 2.5, false, "", dod1);
-	Paleta* paleta2 = new Paleta(2, 1.8, false, "", dod2);
-	Kamion* kamion = new Kamion("01.01.2017");
+	firma->pridajNovehoDodavatela(dod4);
+	firma->pridajNovehoDodavatela(dod5);
+	Paleta* paleta1 = new Paleta(1, 9, false, "99.99.9999", dod1);
+	Paleta* paleta2 = new Paleta(2, 4, false, "99.99.9999", dod2);
+	Paleta* paleta3 = new Paleta(1, 5, true, "22.04.2017", dod1);
+	Paleta* paleta4 = new Paleta(1, 19, true, "22.04.2017", dod4);
+	Paleta* paleta5 = new Paleta(2, 3, true, "20.04.2017", dod3); 
+	Paleta* paleta6 = new Paleta(3, 25, true, "22.04.2017", dod5);
+	Paleta* paleta7 = new Paleta(4, 12, false, "99.99.9999", dod1);
+	Paleta* paleta8 = new Paleta(5, 15, true, "22.04.2017", dod3);
+	Paleta* paleta9 = new Paleta(6, 30, true, "22.04.2017", dod5);
+	Paleta* paleta10 = new Paleta(5, 38, false, "99.99.9999", dod4);
+	Paleta* paleta11 = new Paleta(7, 26, true, "26.05.2017", dod4);
+	Paleta* paleta12 = new Paleta(6, 7, true, "22.04.2017", dod4);
+	Kamion* kamion = new Kamion("01.02.2017");
+	Kamion* kamion1 = new Kamion("15.03.2017");
+	Kamion* kamion2 = new Kamion("08.12.2016");
+	Kamion* kamion3 = new Kamion("19.01.2017");
+	Kamion* kamion4 = new Kamion("12.03.2017");
 	kamion->getObsah()->add(paleta1);
-	kamion->getObsah()->add(paleta2);
-	Paleta* paleta3 = new Paleta(1, 5.2, true, "25.04.2017", dod1);
-	cout << paleta3->getDatumDorucenia() << endl;
-	Paleta* paleta4 = new Paleta(1, 19.9, false, "", dod1);
-	Paleta* paleta5 = new Paleta(4, 18.1, true, "28.04.2017", dod3); //poriesit metodu budePrvySkor, aby nedavalo paletu ktora ma dnesny den
-	Paleta* paleta6 = new Paleta(3, 22.1, true, "22.04.2017", dod2);
-	Paleta* paleta7 = new Paleta(2, 15.4, true, "25.04.2017", dod1);
-	Kamion* kamion1 = new Kamion("01.02.2017");
+	kamion->getObsah()->add(paleta2);	
 	kamion1->getObsah()->add(paleta3);
 	kamion1->getObsah()->add(paleta4);
-	kamion1->getObsah()->add(paleta5);
-	kamion1->getObsah()->add(paleta6);
-	kamion1->getObsah()->add(paleta7);
-	//firma->ohlasKamion(firma->naplnKamion1("01.02.2017"));
+	kamion2->getObsah()->add(paleta5);
+	kamion2->getObsah()->add(paleta6);
+	kamion3->getObsah()->add(paleta7);
+	kamion3->getObsah()->add(paleta8);
+	kamion3->getObsah()->add(paleta9);
+	kamion3->getObsah()->add(paleta10);
+	kamion4->getObsah()->add(paleta11);
+	kamion4->getObsah()->add(paleta12);
+	/**
+	//5
 	firma->ohlasKamion(kamion);
 	firma->ohlasKamion(kamion1);
-	firma->vypisKamiony();
+	firma->ohlasKamion(kamion2);
+	firma->ohlasKamion(kamion3);
+	firma->ohlasKamion(kamion4);
+	//6
 	firma->vylozeniePalietDoSkladu(kamion);
 	firma->vylozeniePalietDoSkladu(kamion1);
-	//firma->vypisKamiony();
-	firma->vypisSklad();
-	cout << "Naplnenie vozidiel" << endl;
-	firma->naplnenieVozidiel("23.04.2017"); //do tejto metody asi pojde parameter datum, ze ktory den sa ide rozvazat
-	firma->vypisPaletyZVozidiel();
+	firma->vylozeniePalietDoSkladu(kamion2);
+	firma->vylozeniePalietDoSkladu(kamion3);
+	firma->vylozeniePalietDoSkladu(kamion4);
+	//7
+	firma->naplnenieVozidiel("22.04.2017");
+	//8
 	firma->vylozenieVozidla(vozidlo1, "24.04.2017");
-	firma->vylozenieVozidla(vozidlo2, "24.04.2017");
+	firma->vylozenieVozidla(vozidlo2, "23.04.2017");
 	firma->vylozenieVozidla(vozidlo3, "24.04.2017");
+	firma->vylozenieVozidla(vozidlo4, "26.04.2017");
+	firma->vylozenieVozidla(vozidlo5, "26.04.2017");
+	//9
+	firma->navratVozidla(vozidlo1);
+	firma->navratVozidla(vozidlo2);
 	firma->navratVozidla(vozidlo3);
-	cout << "palety vo vozidlach - kontrola: " << endl;
-	firma->vypisPaletyZVozidiel();
-	cout << "kontrola vyradenia: " << endl;
+	firma->navratVozidla(vozidlo4);
+	firma->navratVozidla(vozidlo5);
+	//10
 	firma->vyradenieVozidielZevidencie();
-	firma->vypisVozidlaPodlaDatumu();
-	//firma->vypisSklad();
-	//firma->otestujPrioritnyFront1();
-	//firma->vypisKamiony();
-	double cislo = firma->randBetween0and1();
-	cout << "Cislo: "  << cislo << endl;
-	firma->vypisNezrealizovanePalety("20.04.2017", "25.04.2017");
-	firma->dodavatelSnajvacsimPoctomNeprevzatychPaliet("20.04.2017", "25.04.2017");
+	//11
 	firma->vypisSklad();
-	//firma->vymazanieDodavatela(dod2);
-	//firma->vypisDodavatelov();
+	//12
+	firma->dodavatelSnajvacsimPoctomNeprevzatychPaliet("20.04.2017", "25.04.2017");
+	//13
+	firma->vypisNezrealizovanePalety("20.04.2017", "25.04.2017");
+	*/
+}
+
+int main() {
+	initHeapMonitor();
+	Firma *firma = new Firma();
+	Datum *datum = new Datum();
+	Kamion *kamion = nullptr;
+	vlozData(firma);
+	int cislo = 0;
+	system("cls");
+	while (cislo != -1)
+	{
+		cout << "...................................\nVitajte v menu:\n";
+		cout << " 1 - Pridanie noveho vozidla\n";
+		cout << " 2 - Vypis vozidiel podla datumu zaradenia do evidencie\n";
+		cout << " 3 - Pridanie noveho dodavatela\n";
+		cout << " 4 - Vypisanie zoznamu dodavatelov v abecednom poradi podla nazvu \n";
+		cout << " 5 - Ohlasenie kamiona s paletami\n";
+		cout << " 6 - Vylozenie paliet z kamiona do centralneho skladu\n";
+		cout << " 7 - Naplnenie vozidiel paletami zo skladu\n";
+		cout << " 8 - Odovzdanie paliet daneho vozidla zakaznikom\n";
+		cout << " 9 - Navrat vozidla do skladu\n";
+		cout << "10 - Vyradenie opotrebovanych vozidiel z evidencie\n";
+		cout << "11 - Vypisanie vsetkych paliet, ktore su aktualne v centralnom sklade\n";
+		cout << "12 - Vyhladanie dodavatela, ktoremu bolo za dane casove obdobie vratene najvacsie mnozstvo neprevzatych paliet\n";
+		cout << "13 - Vypisanie vsetkych paliet 1. triedy, ktore sa v danom casovom obdobi nepodarilo zrealizovat\n";
+		cout << "-1 - Ukoncenie aplikacie\n";
+		cin >> cislo;
+		system("cls");
+		switch (cislo)
+		{
+		case 1: {
+			string spz, datum;
+			double nosnost;
+			cin.ignore();
+			cout << "Zadajte SPZ vozidla: \n";
+			getline(cin, spz);
+			cout << "Zadajte datum pridania do evidencie v tvare dd.mm.yyyy: \n";
+			getline(cin, datum);
+			cout << "\nZadajte nosnost vozidla: \n";
+			cin >> nosnost;
+			system("cls"); // vycisti konzolu !!!
+			firma->pridajNoveVozidlo(new Vozidlo(spz,nosnost,datum));
+		}; break;
+		case 2: {
+			firma->vypisVozidlaPodlaDatumu();
+		}; break;
+		case 3: {
+			string obchodnyNazov, adresaSidla;
+			cin.ignore();
+			cout << "Zadajte obchodny nazov dodavatela: \n";
+			getline(cin, obchodnyNazov);
+			cout << "\nZadajte adresu sidla v tvare ulica-cislo-mesto: \n";
+			getline(cin, adresaSidla);
+			system("cls"); // vycisti konzolu !!!
+			firma->pridajNovehoDodavatela(new Dodavatel(obchodnyNazov, adresaSidla));
+		}; break;
+		case 4: {
+			firma->vypisDodavatelov();
+		}; break;
+		case 5: {
+			kamion = nullptr;
+			string datumPrichodu, datumDorucenia, nazovDod,adresa;
+			int region, hmotnost, pocet;
+			cin.ignore();
+			cout << "Zadajte datum prichodu kamionu v tvare dd.mm.yyyy (predpokladame, ze je mensi rovny ako dnesny datum): \n";
+			getline(cin, datumPrichodu);
+			cout << "Zadajte obchodny nazov dodavatela, od ktoreho kamion pochadza: \n";
+			getline(cin, nazovDod);
+			Dodavatel* dod = firma->vyhladajDodavatelaPodlaNazvu(nazovDod);
+			if (dod == nullptr) {
+				cout << "Tento dodavatel sa v nasej databaze este nenachadza, pridame ho tam. \n";
+				cout << "Zadajte adresu sidla dodavatela v tvare ulica-cislo-mesto: \n";
+				getline(cin, adresa);
+				dod = new Dodavatel(nazovDod, adresa);
+				firma->pridajNovehoDodavatela(dod);
+				system("cls");
+			}
+			kamion = new Kamion(datumPrichodu);
+			cout << "Zadajte pocet paliet: \n";
+			cin >> pocet;
+			system("cls");
+			for (int i = 1; i <= pocet; i++) {
+				system("cls");
+				cin.ignore();
+				cout << "Paleta c. " << i << ": " << endl;
+				cout << "Ak je paleta 1.triedy, zadajte jej datum dorucenia v tvare dd.mm.yyyy, inak zadajte 99.99.9999\n";
+				getline(cin, datumDorucenia);
+				bool prvejTriedy = false;
+				if (datumDorucenia != "") prvejTriedy = true;
+				cout << "Zadajte region, do ktoreho ma byt paleta dorucena (berte do uvahy, ze regiony su cislovane od 1 po 8): " << endl;
+				cin >> region;
+				cout << "Zadajte hmotnost palety ako cele cislo: "<< endl;
+				cin >> hmotnost;
+				kamion->getObsah()->add(new Paleta(region, hmotnost, prvejTriedy, datumDorucenia, dod));
+			}
+			firma->ohlasKamion(kamion);
+			system("cls");
+			//cout << "Kamion bol zaevidovany, pokracujte, prosim, bodom c.6, aby sme jeho palety mohli vylozit do skladu" << endl;
+		}; break;
+		case 6: {
+			int cislo;
+			cout << "Ohlasene kamiony: " << endl;
+			firma->vypisKamiony();
+			cout << "" << endl;
+			cout << "Napiste cislo kamionu, ktoreho palety chcete vylozit do skladu: " << endl;
+			cin >> cislo;
+			system("cls");
+			firma->vylozeniePalietDoSkladu(firma->getKamiony()->operator[](cislo-1));
+		}; break;
+		case 7: {
+			string datum;
+			cin.ignore();
+			cout << "Zadajte datum, kedy sa budu vozidla nakladat v tvare dd.mm.yyyy: " << endl;
+			getline(cin, datum);
+			firma->naplnenieVozidiel(datum);
+		}; break;
+		case 8: {
+			int cislo;
+			string datum;
+			cin.ignore();
+			cout << "Nalozene vozidla: " << endl;
+			firma->vypisNalozeneVozidla();
+			cout << "" << endl;
+			cout << "Napiste cislo vozidla, ktoreho palety chcete odovzdat zakaznikovi: " << endl;
+			cin >> cislo;
+			cout << "Zadajte datum, kedy sa sa vybrane vozidlo vylozi v tvare dd.mm.yyyy: " << endl;
+			getline(cin, datum);
+			system("cls");
+			firma->vylozenieVozidla(firma->getVozidla()->operator[](cislo - 1), datum);
+		}; break;
+		case -1: {
+			cislo = -1;
+		}; break;
+		}
+	}
+
+	cout << "Koniec" << endl;
 	delete datum;
+	delete firma;
 	return 0;
 }

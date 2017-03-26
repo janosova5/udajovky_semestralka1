@@ -1,5 +1,5 @@
 #include "Zasielka.h"
-
+#include "heap_monitor.h"
 
 
 Zasielka::Zasielka(int paRegion)
@@ -11,7 +11,10 @@ Zasielka::Zasielka(int paRegion)
 
 Zasielka::~Zasielka() //????
 {
-	aPalety->clear();
+	for (Paleta *p : *aPalety) {
+		delete p;
+	}
+	//aPalety->clear();
 	delete aPalety;
 }
 

@@ -1,5 +1,5 @@
 #include "Kamion.h"
-
+#include "heap_monitor.h"
 
 
 Kamion::Kamion(string paDatum)
@@ -12,7 +12,7 @@ Kamion::Kamion(string paDatum)
 Kamion::~Kamion() //????
 {
 	//aObsah->clear();
-	//delete aObsah;
+	delete aObsah;
 }
 
 string Kamion::getDatumPrichodu()

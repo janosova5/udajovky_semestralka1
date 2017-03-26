@@ -193,7 +193,7 @@ namespace DS
 	template<typename T>
 	void ArrayList<T>::clear()
 	{
-		changeCapacity(0);
+		size_ = 0;
 	}
 
 	template<typename T>

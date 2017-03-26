@@ -10,6 +10,7 @@
 #include "LinkedList.h"
 #include "ImplicitQueue.h"
 #include <iostream>
+#include "heap_monitor.h"
 using namespace std;
 
 using DS::ArrayList;
@@ -23,30 +24,34 @@ private:
 	ArrayList<Vozidlo*> *aEvidenciaVozidiel; //tu iba budu uchovane vsetky vozidla, ktore ma firma k dispo
 	PriorityQueue_Heap<Vozidlo*> *aRozvazajuceVozidla; //sem budem davat vozidla, ked s nimi budem pracovat a vyberat ich podla opotrebovanosti
 	ExplicitQueue<Vozidlo*> *aVyradeneVozidla; 
-	ArrayList<Zasielka*> *aSklad;
+	PriorityQueue_Heap<Paleta*> *aSklad; //toto pouzivam ked s paletami pracujem
 	ArrayList<Dodavatel*> *aDodavatelia; 
-	LinkedList<Kamion*> *aKamiony; 
+	ArrayList<Kamion*> *aKamiony; 
 	ArrayList<Paleta*> *aNezrealizovane;
 	ArrayList<Paleta*> *aNeprevzate;
 	LinkedList<Paleta*> *aNezaevidovaliSaDoSkladu; //lebo tam len pridavam
+	ArrayList<Paleta*> *aEvidenciaPaliet; //tu evidujem vsetky palety kvoli vypisu
 
 public:
 	Firma();
 	~Firma();
 	bool pridajNoveVozidlo(Vozidlo* vozidlo); 
-	bool pridajNovehoDodavatela(Dodavatel* dodavatel);
+	bool pridajNovehoDodavatela(Dodavatel *dod);
 	void vypisDodavatelov();
 	void otestujPrioritnyFront(int o);
 	void vypisVozidlaPodlaDatumu();
 	void ohlasKamion(Kamion* paKamion); //5
 	void vypisKamiony(); //na otestovanie metody 5
+	ArrayList<Kamion*>* getKamiony();
+	ArrayList<Vozidlo*>* getVozidla();
+	void vypisNalozeneVozidla();
 	void vylozeniePalietDoSkladu(Kamion* paKamion); //6
 	void vypisSklad(); //otestovanie 6
 	double vratMaxNosnost();
 	void naplnenieVozidiel(string paDatum); //7
 	void otestujPrioritnyFront1();
 	//void skontrolujOpotrebovanie();
-	void vypisPaletyZVozidiel();
+	void vypisPaletyZVozidielPoVylozeni();
 	//void sortPodlaOpotrebovanosti();
 	void sortPodlaHmotnosti(ArrayList<Paleta*> *prvejTriedy);
 	void sortPodlaDatumu(ArrayList<Paleta*> *ostatne);
@@ -61,6 +66,8 @@ public:
 	void ulozDodavatelovDoSuboru();
 	void nacitajDodavatelovZoSuboru();
 	bool uzObsahujeTohtoDodavatela(string nazov); 
-
+	void vypisEvidenciuPaliet();
+	int zmenDatumNaInt(string paDatum);
+	Dodavatel* vyhladajDodavatelaPodlaNazvu(string nazov);
 };
 

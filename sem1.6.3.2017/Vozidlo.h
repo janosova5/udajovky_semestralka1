@@ -3,6 +3,7 @@
 #include "Paleta.h"
 #include <iostream>
 #include <string>
+#include "heap_monitor.h"
 
 using std::string;
 using DS::ExplicitStack;

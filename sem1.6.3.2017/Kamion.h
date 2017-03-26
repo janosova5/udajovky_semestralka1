@@ -2,6 +2,7 @@
 #include "Paleta.h"
 #include <string>
 #include "ArrayList.h"
+#include "heap_monitor.h"
 using namespace std;
 
 using DS::ArrayList;

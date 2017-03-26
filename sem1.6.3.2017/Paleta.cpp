@@ -7,7 +7,7 @@ Paleta::Paleta()
 {
 }
 
-Paleta::Paleta(int paRegion, double paHmotnost, bool paPrvejTriedy, string paDatum, Dodavatel *dod)
+Paleta::Paleta(int paRegion, int paHmotnost, bool paPrvejTriedy, string paDatum, Dodavatel *dod)
 {
 	aRegion = paRegion;
 	aHmotnost = paHmotnost;
@@ -37,7 +37,7 @@ int Paleta::getRegion()
 	return aRegion;
 }
 
-double Paleta::getHmotnost()
+int Paleta::getHmotnost()
 {
 	return aHmotnost;
 }
@@ -98,7 +98,7 @@ void Paleta::setRegion(int paRegion)
 	aRegion = paRegion;
 }
 
-void Paleta::setHmotnost(double paHmotnost)
+void Paleta::setHmotnost(int paHmotnost)
 {
 	aHmotnost = paHmotnost;
 }
