@@ -20,7 +20,7 @@ string Datum::getDnesnyDatum()
 	tm nowLocal;
 
 	now = time(NULL);
-	nowLocal = *localtime(&now);
+	nowLocal = *localtime(&now); //warning
 	// mesiace +1 roky + 1900 
 	int dni, mesiace, roky;
 	dni = (int)nowLocal.tm_mday;
@@ -135,7 +135,7 @@ bool Datum::jeDatumZajtra(string paDatum)
 	tm nowLocal;
 	//
 	now = time(NULL);
-	nowLocal = *localtime(&now);
+	nowLocal = *localtime(&now); //warning
 	// mesiace +1 roky + 1900 testik
 	int dniTeras, mesiaceTeras, rokyTeras;
 	dniTeras = (int)nowLocal.tm_mday;

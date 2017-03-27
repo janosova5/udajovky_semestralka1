@@ -131,13 +131,13 @@
     <ClCompile Include="DSRoutines.cpp">
       <Filter>Source Files\DS</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files\Ostatne</Filter>
-    </ClCompile>
     <ClCompile Include="Kamion.cpp">
       <Filter>Source Files\Ostatne</Filter>
     </ClCompile>
     <ClCompile Include="Zasielka.cpp">
+      <Filter>Source Files\Ostatne</Filter>
+    </ClCompile>
+    <ClCompile Include="Hlavna.cpp">
       <Filter>Source Files\Ostatne</Filter>
     </ClCompile>
   </ItemGroup>

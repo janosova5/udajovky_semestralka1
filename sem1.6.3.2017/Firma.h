@@ -42,9 +42,10 @@ public:
 	void vypisVozidlaPodlaDatumu();
 	void ohlasKamion(Kamion* paKamion); //5
 	void vypisKamiony(); //na otestovanie metody 5
+	int vypisVylozeneVozidla();
 	ArrayList<Kamion*>* getKamiony();
 	ArrayList<Vozidlo*>* getVozidla();
-	void vypisNalozeneVozidla();
+	int vypisNalozeneVozidla();
 	void vylozeniePalietDoSkladu(Kamion* paKamion); //6
 	void vypisSklad(); //otestovanie 6
 	double vratMaxNosnost();

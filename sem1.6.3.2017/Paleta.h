@@ -15,6 +15,7 @@ private:
 	string aDatumDorucenia;
 	bool aZrealizovana;
 	bool aPrevzata;
+	bool aJeNaSklade;
 	string aDatumVratenia;
 	string aDatumPrichodu;
 	bool aNalozena;
@@ -31,6 +32,7 @@ public:
 	bool jePrevzata();
 	bool jeNalozena();
 	bool jeAktualneNaSklade();
+	bool jeNaSklade();
 	string getDatumDorucenia();
 	string getDatumVratenia();
 	string getDatumPrichodu();
@@ -47,6 +49,7 @@ public:
 	void setDodavatel(Dodavatel *paDodavatel);
 	void setNalozena(bool nalozena);
 	void setDatumNeprevzatia(string datum);
+	void setJeNaSklade(bool je);
 
 };
 

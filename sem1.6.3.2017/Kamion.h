@@ -11,12 +11,14 @@ class Kamion
 private:
 	string aDatumPrichodu;
 	ArrayList<Paleta*> *aObsah;
-
+	bool aJeVylozeny;
 public:
 	Kamion(string paDatum);
 	~Kamion();
 	string getDatumPrichodu();
 	ArrayList<Paleta*>* getObsah();
 	void setDatumPrichodu(string paDatum);
+	bool jeVylozeny();
+	void setJeVylozeny(bool je);
 };
 

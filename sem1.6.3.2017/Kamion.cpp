@@ -4,14 +4,20 @@
 
 Kamion::Kamion(string paDatum)
 {
-	aObsah = new ArrayList<Paleta*>();
+	aObsah = new ArrayList<Paleta*>(10);
 	aDatumPrichodu = paDatum;
+	aJeVylozeny = false;
 }
 
 
 Kamion::~Kamion() //????
 {
 	//aObsah->clear();
+	//for (Paleta *p : *aObsah) {
+		//if (p != nullptr) {
+			//delete p;
+		//}
+	//}
 	delete aObsah;
 }
 
@@ -28,4 +34,14 @@ ArrayList<Paleta*>* Kamion::getObsah()
 void Kamion::setDatumPrichodu(string paDatum)
 {
 	aDatumPrichodu = paDatum;
+}
+
+bool Kamion::jeVylozeny()
+{
+	return aJeVylozeny;
+}
+
+void Kamion::setJeVylozeny(bool je)
+{
+	aJeVylozeny = je;
 }

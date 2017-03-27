@@ -19,6 +19,7 @@ private:
 	double aKolkoJeNalozene;
 	bool aJeNaCeste;
 	bool aJeVyradene;
+	bool aJeVylozene;
 	ExplicitStack<Paleta*> *aPalety;
 
 public:
@@ -30,6 +31,7 @@ public:
 	int getOpotrebovanie() const;
 	int getRegion() const;
 	string getDatum() const;
+	bool jeVylozene();
 	ExplicitStack<Paleta*>* getPalety();
 	friend bool operator ==(Vozidlo a, Vozidlo b);
 	void setSPZ(string paSPZ);
@@ -46,6 +48,7 @@ public:
 	bool jeNaCeste();
 	bool jeVyradene();
 	void setJeVyradene(bool je);
+	void setJeVylozene(bool je);
 };
 
 inline bool operator ==(Vozidlo a, Vozidlo b)

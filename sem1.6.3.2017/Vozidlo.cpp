@@ -15,6 +15,7 @@ Vozidlo::Vozidlo(string paSPZ, double paNosnost, string paDatum)
 	aKolkoJeNalozene = 0.0;
 	aJeNaCeste = false;
 	aJeVyradene = false;
+	aJeVylozene = true;
 	aPalety = new ExplicitStack<Paleta*>();
 }
 
@@ -48,6 +49,11 @@ int Vozidlo::getRegion() const
 string Vozidlo::getDatum() const
 {
 	return aDatumZaradenia;
+}
+
+bool Vozidlo::jeVylozene()
+{
+	return aJeVylozene;
 }
 
 ExplicitStack<Paleta*>* Vozidlo::getPalety()
@@ -161,6 +167,11 @@ bool Vozidlo::jeVyradene()
 void Vozidlo::setJeVyradene(bool je)
 {
 	aJeVyradene = je;
+}
+
+void Vozidlo::setJeVylozene(bool je)
+{
+	aJeVylozene = je;
 }
 
 

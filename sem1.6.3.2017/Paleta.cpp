@@ -20,6 +20,7 @@ Paleta::Paleta(int paRegion, int paHmotnost, bool paPrvejTriedy, string paDatum,
 	aDatumNeprevzatia = "";
 	aDodavatel = dod;
 	aNalozena = false;
+	aJeNaSklade = false;
 	if (aPrvejTriedy) {
 		aDatumDorucenia = paDatum;
 	}
@@ -64,9 +65,15 @@ bool Paleta::jeNalozena()
 
 bool Paleta::jeAktualneNaSklade()
 {
-	if (!(this->jeNalozena()) && this->jePrevzata() == false && this->getDatumNeprevzatia() == "" && this->jeZrealizovana() && this->getDatumVratenia() == "") return true;
+	if (!(this->jeNalozena()) && this->jePrevzata() == false && this->getDatumNeprevzatia() == "" && this->jeZrealizovana() && this->getDatumVratenia() == "" && this->jeNaSklade()) return true;
 	else return false;
 }
+
+bool Paleta::jeNaSklade()
+{
+	return aJeNaSklade;
+}
+
 
 string Paleta::getDatumDorucenia()
 {
@@ -153,4 +160,9 @@ void Paleta::setNalozena(bool nalozena)
 void Paleta::setDatumNeprevzatia(string datum)
 {
 	aDatumNeprevzatia = datum;
+}
+
+void Paleta::setJeNaSklade(bool je)
+{
+	aJeNaSklade = je;
 }

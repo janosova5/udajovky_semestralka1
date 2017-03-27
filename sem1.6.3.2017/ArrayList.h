@@ -182,7 +182,8 @@ namespace DS
 	template<typename T>
 	int ArrayList<T>::getIndexOf(const T& data)
 	{
-		for (int i = 0; i < size_; i++) {
+		int pocet = size_;
+		for (int i = 0; i < pocet; i++) {
 			if (equalityFunction_((*array_)[i], data))
 				return i;
 

@@ -72,7 +72,8 @@ namespace DS {
 		list_->removeAt(list_->size() - 1);
 		int curIndex = 0;
 		int sonIndex = getGreaterSonIndex(curIndex);
-		while (sonIndex < list_->size() && (*list_)[sonIndex]->getPriority() < (*list_)[curIndex]->getPriority()) {
+		int velkost = list_->size();
+		while ((sonIndex < velkost) && (*list_)[sonIndex]->getPriority() < (*list_)[curIndex]->getPriority()) {
 			DSRoutines::swap<PriorityItem<T>*>((*list_)[sonIndex], (*list_)[curIndex]);
 			curIndex = sonIndex;
 			sonIndex = getGreaterSonIndex(curIndex);
@@ -91,8 +92,10 @@ namespace DS {
 	{
 		int lsonIndex = 2 * index + 1;
 		int psonIndex = 2 * index + 2;
-		PriorityItem<T>* lSon = lsonIndex < list_->size() ? (*list_)[lsonIndex] : nullptr;
-		PriorityItem<T>* pSon = psonIndex < list_->size() ? (*list_)[psonIndex] : nullptr;
+		int velkost = list_->size();
+		int velkost1 = list_->size();
+		PriorityItem<T>* lSon = lsonIndex < velkost ? (*list_)[lsonIndex] : nullptr;
+		PriorityItem<T>* pSon = psonIndex < velkost1 ? (*list_)[psonIndex] : nullptr;
 		if (lSon != nullptr && pSon != nullptr) {
 			return lSon->getPriority() < pSon->getPriority() ? lsonIndex : psonIndex;
 
