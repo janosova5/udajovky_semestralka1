@@ -5,11 +5,11 @@ Vozidlo::Vozidlo()
 {
 }
 
-Vozidlo::Vozidlo(string paSPZ, double paNosnost, string paDatum)
+Vozidlo::Vozidlo(string paSPZ, int paNosnost, int opotrebovanie, string paDatum)
 {
 	aSPZ = paSPZ;
 	aNosnost = paNosnost;
-	aOpotrebovanie = 0;
+	aOpotrebovanie = opotrebovanie;
 	aRegion = 0;
 	aDatumZaradenia = paDatum;
 	aKolkoJeNalozene = 0.0;
@@ -31,7 +31,7 @@ string Vozidlo::getSPZ() const
 	return aSPZ;
 }
 
-double Vozidlo::getNosnost() const
+int Vozidlo::getNosnost() const
 {
 	return aNosnost;
 }
@@ -66,7 +66,7 @@ void Vozidlo::setSPZ(string paSPZ)
 	aSPZ = paSPZ;
 }
 
-void Vozidlo::setNosnost(double paNosnost)
+void Vozidlo::setNosnost(int paNosnost)
 {
 	aNosnost = paNosnost;
 }

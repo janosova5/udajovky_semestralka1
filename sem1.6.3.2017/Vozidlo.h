@@ -8,11 +8,11 @@
 using std::string;
 using DS::ExplicitStack;
 
-class Vozidlo //malo by mat este kontajner paliet, aby som ich tam mohla nalozit, ot by mohol byt aj stack
+class Vozidlo 
 {
 private:
 	string aSPZ;
-	double aNosnost;
+	int aNosnost;
 	int aOpotrebovanie;
 	int aRegion;
 	string aDatumZaradenia;
@@ -24,10 +24,10 @@ private:
 
 public:
 	Vozidlo();
-	Vozidlo(string paSPZ, double paNosnost, string paDatum);
+	Vozidlo(string paSPZ, int paNosnost, int opotrebovanie, string paDatum);
 	~Vozidlo();
 	string getSPZ()  const;
-	double getNosnost() const;
+	int getNosnost() const;
 	int getOpotrebovanie() const;
 	int getRegion() const;
 	string getDatum() const;
@@ -35,7 +35,7 @@ public:
 	ExplicitStack<Paleta*>* getPalety();
 	friend bool operator ==(Vozidlo a, Vozidlo b);
 	void setSPZ(string paSPZ);
-	void setNosnost(double paNosnost);
+	void setNosnost(int paNosnost);
 	void zvysOpotrebovanie(int paRegion);
 	void setRegion(int paRegion);
 	bool pridajPaletu(Paleta *paleta);

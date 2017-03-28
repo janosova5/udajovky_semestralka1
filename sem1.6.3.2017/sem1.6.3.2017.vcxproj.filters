@@ -84,9 +84,6 @@
     <ClInclude Include="Kamion.h">
       <Filter>Header Files\Ostatne</Filter>
     </ClInclude>
-    <ClInclude Include="Zasielka.h">
-      <Filter>Header Files\Ostatne</Filter>
-    </ClInclude>
     <ClInclude Include="LinkedList.h">
       <Filter>Header Files\DS</Filter>
     </ClInclude>
@@ -132,9 +129,6 @@
       <Filter>Source Files\DS</Filter>
     </ClCompile>
     <ClCompile Include="Kamion.cpp">
-      <Filter>Source Files\Ostatne</Filter>
-    </ClCompile>
-    <ClCompile Include="Zasielka.cpp">
       <Filter>Source Files\Ostatne</Filter>
     </ClCompile>
     <ClCompile Include="Hlavna.cpp">

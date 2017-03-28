@@ -1,7 +1,9 @@
 #include "Datum.h"
 #include <iostream>
+#include "Array.h"
 
 using std::cout;
+using std::array;
 
 Datum::Datum()
 {
@@ -115,168 +117,6 @@ bool Datum::budePrvySkor(string paPrvyDat, string paDruhyDat)
 	}
 }
 
-bool Datum::jeDatumZajtra(string paDatum)
-{
-	if (paDatum.size() < 10)
-	{
-		std::cout << "ZLY FORMAT DATUMU !!! ma to byt: napr 01.12.2016";
-		throw std::invalid_argument("Zly format datumu zadaj ho vo formate 08.12.2016");
-	}
-
-	string dni = paDatum.substr(0, 2);
-	string mesiace = paDatum.substr(3, 2);
-	string roky = paDatum.substr(6, 4);
-
-	int odovzd_dni = atoi(dni.c_str());
-	int odovzd_mesiace = atoi(mesiace.c_str());
-	int odovzd_roky = atoi(roky.c_str());
-
-	time_t now;
-	tm nowLocal;
-	//
-	now = time(NULL);
-	nowLocal = *localtime(&now); //warning
-	// mesiace +1 roky + 1900 testik
-	int dniTeras, mesiaceTeras, rokyTeras;
-	dniTeras = (int)nowLocal.tm_mday;
-	mesiaceTeras = (int)nowLocal.tm_mon;
-	mesiaceTeras++; // zvecsene koli funkcnosti 
-	rokyTeras = (int)nowLocal.tm_year;
-	rokyTeras += 1900; // zvecsene koli funkcnosti
-
-	int pomocnaMesiace = mesiaceTeras; // lebo potrebujem menit aj mesiac 
-	switch (pomocnaMesiace)
-	{
-	case 1: {
-		if (dniTeras <= 30) { dniTeras += 1; break; }
-
-		if (dniTeras == 31)
-		{
-			dniTeras = 1; mesiaceTeras = 2; break;
-		}
-
-	}
-
-	case 2: {
-		if (dniTeras <= 28) { dniTeras += 1; break; }
-
-		if (dniTeras == 29)
-		{
-			dniTeras = 1; mesiaceTeras = 3; break;
-		}
-
-	}
-
-	case 3: {
-		if (dniTeras <= 30) { dniTeras += 1; break; }
-		if (dniTeras == 31)
-		{
-			dniTeras = 1; mesiaceTeras = 4; break;
-		}
-
-	}
-
-	case 4: {
-		if (dniTeras <= 29) { dniTeras += 1; break; }
-
-		if (dniTeras == 30)
-		{
-			dniTeras = 1; mesiaceTeras = 5; break;
-		}
-
-	}
-
-	case 5: {
-		if (dniTeras <= 30) { dniTeras += 1; break; }
-
-		if (dniTeras == 31)
-		{
-			dniTeras = 1; mesiaceTeras = 6; break;
-		}
-
-	}
-
-	case 6: {
-		if (dniTeras <= 29) { dniTeras += 1; break; }
-
-		if (dniTeras == 30)
-		{
-			dniTeras = 1; mesiaceTeras = 7; break;
-		}
-
-	}
-
-	case 7: {
-		if (dniTeras <= 30) { dniTeras += 1; break; }
-
-		if (dniTeras == 31)
-		{
-			dniTeras = 1; mesiaceTeras = 8; break;
-		}
-
-	}
-
-	case 8: {
-		if (dniTeras <= 30) { dniTeras += 1; break; }
-
-		if (dniTeras == 31)
-		{
-			dniTeras = 1; mesiaceTeras = 9; break;
-		}
-
-	}
-
-	case 9: {
-		if (dniTeras <= 29) { dniTeras += 1; break; }
-
-		if (dniTeras == 30)
-		{
-			dniTeras = 1; mesiaceTeras = 10; break;
-		}
-
-	}
-
-	case 10: {
-		if (dniTeras <= 30) { dniTeras += 1; break; }
-
-		if (dniTeras == 31)
-		{
-			dniTeras = 1; mesiaceTeras = 11; break;
-		}
-
-	}
-
-	case 11: {
-		if (dniTeras <= 29) { dniTeras += 1; break; }
-
-		if (dniTeras == 30)
-		{
-			dniTeras = 1; mesiaceTeras = 12; break;
-		}
-
-	}
-
-	case 12: {
-		if (dniTeras <= 30) { dniTeras += 1; break; }
-
-		if (dniTeras == 31)
-		{
-			dniTeras = 1; mesiaceTeras = 1; rokyTeras++; break;
-		}
-
-	}
-	}
-
-	if (odovzd_roky == rokyTeras &&
-		odovzd_mesiace == mesiaceTeras &&
-		odovzd_dni == dniTeras)
-	{
-		return true;
-	}
-	else {
-		return false;
-	}
-}
 
 bool Datum::jeDatumVIntervale(string paSkusanyDatum, string paDatumOd, string paDatumDo)
 {
@@ -323,4 +163,59 @@ bool Datum::jeDatumVIntervale(string paSkusanyDatum, string paDatumOd, string pa
 	return false;
 
 
+}
+
+string Datum::getZajtra()
+{
+	ArrayList<int> *pole = new ArrayList<int>(12);
+	pole->add(31);
+	pole->add(28);
+	pole->add(31);
+	pole->add(30);
+	pole->add(31);
+	pole->add(30);
+	pole->add(30);
+	pole->add(31);
+	pole->add(30);
+	pole->add(31);
+	pole->add(30);
+	pole->add(31);
+	string dnes = this->getDnesnyDatum();
+	string dni = dnes.substr(0, 2);
+	string mesiace = dnes.substr(3, 2);
+	string roky = dnes.substr(6, 4);
+
+	int dnes_dni = atoi(dni.c_str());
+	int dnes_mesiace = atoi(mesiace.c_str());
+	int dnes_roky = atoi(roky.c_str());
+
+	int zajtra_dni = 0;
+	int zajtra_mes = 0;
+	int zajtra_rok = 0;
+	if (dnes_dni + 1 > pole->operator[](dnes_mesiace - 1)) {
+		zajtra_dni = 1;
+		if (dnes_mesiace < 12) {
+			zajtra_mes = dnes_mesiace + 1;
+			zajtra_rok = dnes_roky;
+		}
+		else {
+			zajtra_mes = 1;
+			zajtra_rok = dnes_roky + 1;
+		}
+	}
+	else {
+		zajtra_dni = dnes_dni + 1;
+		zajtra_mes = dnes_mesiace;
+		zajtra_rok = dnes_roky;
+	}
+	string dniStr = "";
+	if(zajtra_dni < 10) dniStr = "0" + to_string(zajtra_dni);
+	else dniStr = to_string(zajtra_dni);
+	string mesStr = "";
+	if(zajtra_mes < 10)  mesStr = "0" + to_string(zajtra_mes);
+	else mesStr = to_string(zajtra_mes);
+	string rokStr = to_string(zajtra_rok);
+	string zajtra = dniStr + "." + mesStr + "." + rokStr;
+	delete pole;
+	return zajtra;
 }

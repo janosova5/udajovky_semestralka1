@@ -24,7 +24,7 @@ Paleta::Paleta(int paRegion, int paHmotnost, bool paPrvejTriedy, string paDatum,
 	if (aPrvejTriedy) {
 		aDatumDorucenia = paDatum;
 	}
-	else aDatumDorucenia = "00.00.0000"; //lubovolny datum dorucenia
+	else aDatumDorucenia = "99.99.9999"; //lubovolny datum dorucenia
 }
 
 

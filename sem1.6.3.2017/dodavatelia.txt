@@ -1,6 +1,11 @@
 Billa
 Sandricka25-Nitra
+CBA
+Dolna19-Kosice
+Kaufland
+Majova823-Trencin
 Lidl
 Vysokoskolakov15-Zilina
 Tesco
 Vlcince38-Namestovo
+#
