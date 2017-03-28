@@ -173,7 +173,6 @@
     <ClInclude Include="StructureItem.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Vozidlo.h" />
-    <ClInclude Include="Zasielka.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Datum.cpp" />
@@ -186,7 +185,6 @@
     <ClCompile Include="Structure.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Vozidlo.cpp" />
-    <ClCompile Include="Zasielka.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

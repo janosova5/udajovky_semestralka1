@@ -26,7 +26,7 @@ private:
 	ExplicitQueue<Vozidlo*> *aVyradeneVozidla; 
 	PriorityQueue_Heap<Paleta*> *aSklad; //toto pouzivam ked s paletami pracujem
 	ArrayList<Dodavatel*> *aDodavatelia; 
-	ArrayList<Kamion*> *aKamiony; 
+	ArrayList<Kamion*> *aKamiony; //vypisujem ich
 	ArrayList<Paleta*> *aNezrealizovane;
 	ArrayList<Paleta*> *aNeprevzate;
 	LinkedList<Paleta*> *aNezaevidovaliSaDoSkladu; //lebo tam len pridavam
@@ -38,10 +38,9 @@ public:
 	bool pridajNoveVozidlo(Vozidlo* vozidlo); 
 	bool pridajNovehoDodavatela(Dodavatel *dod);
 	void vypisDodavatelov();
-	void otestujPrioritnyFront(int o);
 	void vypisVozidlaPodlaDatumu();
 	void ohlasKamion(Kamion* paKamion); //5
-	void vypisKamiony(); //na otestovanie metody 5
+	int vypisKamiony(); //na otestovanie metody 5
 	int vypisVylozeneVozidla();
 	ArrayList<Kamion*>* getKamiony();
 	ArrayList<Vozidlo*>* getVozidla();
@@ -50,13 +49,7 @@ public:
 	void vypisSklad(); //otestovanie 6
 	double vratMaxNosnost();
 	void naplnenieVozidiel(string paDatum); //7
-	void otestujPrioritnyFront1();
-	//void skontrolujOpotrebovanie();
 	void vypisPaletyZVozidielPoVylozeni();
-	//void sortPodlaOpotrebovanosti();
-	void sortPodlaHmotnosti(ArrayList<Paleta*> *prvejTriedy);
-	void sortPodlaDatumu(ArrayList<Paleta*> *ostatne);
-	void nemozuSaNalozitVsetky(string paDatum, ArrayList<Vozidlo*> *vozidla);
 	void vylozenieVozidla(Vozidlo *vozidlo, string datum); //funkcionalita 8 
 	double randBetween0and1();
 	void navratVozidla(Vozidlo *vozidlo); //funkcionalita 9
@@ -67,6 +60,16 @@ public:
 	void ulozDodavatelovDoSuboru();
 	void nacitajDodavatelovZoSuboru();
 	bool uzObsahujeTohtoDodavatela(string nazov); 
+	void ulozEvidenciuVozidielDoSuboru();
+	void nacitajVozidlaZoSuboru();
+	bool uzObsahujeTotoVozidlo(string spz);
+	void ulozSkladDoSuboru();
+	void ulozNevylozeneKamionyDoSuboru();
+	void ulozNalozeneVozidlaDoSuboru();
+	void ulozVylozeneVozidlaDoSuboru();
+	void ulozEvidenciuDoSuboru();
+	void nacitajSkladZoSuboru();
+	void nacitajNevylozeneKamionyZoSuboru();
 	void vypisEvidenciuPaliet();
 	int zmenDatumNaInt(string paDatum);
 	Dodavatel* vyhladajDodavatelaPodlaNazvu(string nazov);

@@ -3,11 +3,11 @@
 #include "heap_monitor.h"
 
 void vlozData(Firma *firma) {
-	Vozidlo* vozidlo1 = new Vozidlo("abcd123", 20.5, "05.05.2016");
-	Vozidlo* vozidlo2 = new Vozidlo("efgh456", 27.6, "25.05.2015");
-	Vozidlo* vozidlo3 = new Vozidlo("ijkl789", 21.2, "04.01.2016");
-	Vozidlo* vozidlo4 = new Vozidlo("mnop100", 33.5, "13.03.2017");
-	Vozidlo* vozidlo5 = new Vozidlo("rstu123", 37.3, "21.02.2017");
+	Vozidlo* vozidlo1 = new Vozidlo("abcd123", 20, 0, "05.05.2016");
+	Vozidlo* vozidlo2 = new Vozidlo("efgh456", 27, 0, "25.05.2015");
+	Vozidlo* vozidlo3 = new Vozidlo("ijkl789", 21, 0, "04.01.2016");
+	Vozidlo* vozidlo4 = new Vozidlo("mnop100", 33, 0, "13.03.2017");
+	Vozidlo* vozidlo5 = new Vozidlo("rstu123", 37, 0, "21.02.2017");
 	//1
 	firma->pridajNoveVozidlo(vozidlo1);
 	firma->pridajNoveVozidlo(vozidlo2);
@@ -91,8 +91,11 @@ void vlozData(Firma *firma) {
 	*/
 }
 int menu() {
+	Datum *d = new Datum();
 	int cislo;
 	cout << "...................................\nVitajte v menu:\n";
+	cout << "Dnes je: " << d->getDnesnyDatum() << endl;
+	cout << "Zajtra je: " << d->getZajtra() << endl;
 	cout << " 1 - Pridanie noveho vozidla\n";
 	cout << " 2 - Vypis vozidiel podla datumu zaradenia do evidencie\n";
 	cout << " 3 - Pridanie noveho dodavatela\n";
@@ -109,6 +112,7 @@ int menu() {
 	cout << "-1 - Ukoncenie aplikacie\n";
 	cin >> cislo;
 	system("cls");
+	delete d;
 	return cislo;
 }
 
@@ -116,9 +120,21 @@ int main() {
 	initHeapMonitor();
 	Firma *firma = new Firma();
 	Datum *datum = new Datum();
-	//Kamion *kamion = nullptr;
-	vlozData(firma);
+	//vlozData(firma);
 	int cislo = 0;
+	system("cls");
+	int volba = 0;
+	cout << "Pred zacatim programu chcete nacitat aktualnu evidenciu zo suboru alebo zacat s novymi datami? " << endl;
+	cout << "Aktualna evidencia zo suboru - 1" << endl;
+	cout << "Nove data - 2" << endl;
+	cin >> volba;
+	if (volba == 1) {
+		firma->nacitajDodavatelovZoSuboru();
+		firma->nacitajVozidlaZoSuboru();
+		firma->nacitajSkladZoSuboru();
+		firma->nacitajNevylozeneKamionyZoSuboru();
+	}
+	else vlozData(firma);
 	system("cls");
 	while (cislo != -1)
 	{
@@ -127,7 +143,7 @@ int main() {
 		{
 		case 1: {
 			string spz, datum;
-			double nosnost;
+			int nosnost;
 			cin.ignore();
 			cout << "Zadajte SPZ vozidla: \n";
 			getline(cin, spz);
@@ -136,7 +152,7 @@ int main() {
 			cout << "\nZadajte nosnost vozidla: \n";
 			cin >> nosnost;
 			system("cls"); // vycisti konzolu !!!
-			firma->pridajNoveVozidlo(new Vozidlo(spz,nosnost,datum));
+			firma->pridajNoveVozidlo(new Vozidlo(spz,nosnost,0, datum));
 		}; break;
 		case 2: {
 			firma->vypisVozidlaPodlaDatumu();
@@ -196,25 +212,21 @@ int main() {
 		case 6: {
 			int cislo;
 			cout << "Ohlasene kamiony: " << endl;
-			firma->vypisKamiony();
-			cout << "" << endl;
-			cout << "Napiste cislo kamionu, ktoreho palety chcete vylozit do skladu: " << endl;
-			cin >> cislo;
-			system("cls");
-			//Dodavatel *dod5 = new Dodavatel("CBA", "Dolna19-Kosice");
-			//firma->pridajNovehoDodavatela(dod5);
-			//Paleta* paleta1 = new Paleta(1, 9, false, "99.99.9999", dod5);
-			//Kamion* kamion = new Kamion("12.03.2017");
-			//kamion->getObsah()->add(paleta1);
-			Kamion *kamion = firma->getKamiony()->operator[](cislo - 1);
-			firma->vylozeniePalietDoSkladu(kamion);
+			if (firma->vypisKamiony() > 0) {
+				cout << "" << endl;
+				cout << "Napiste cislo kamionu, ktoreho palety chcete vylozit do skladu: " << endl;
+				cin >> cislo;
+				system("cls");
+				Kamion *kamion = firma->getKamiony()->operator[](cislo - 1);
+				firma->vylozeniePalietDoSkladu(kamion);
+			}
+			else menu();
 		}; break;
 		case 7: {
 			string datum;
 			cin.ignore();
 			cout << "Zadajte datum, kedy sa budu vozidla nakladat v tvare dd.mm.yyyy: " << endl;
 			getline(cin, datum);
-			//firma->vypisSklad();
 			firma->naplnenieVozidiel(datum); 
 		}; break;
 		case 8: {
@@ -272,9 +284,24 @@ int main() {
 			firma->vypisNezrealizovanePalety(datum1, datum2);
 		}; break;
 		case -1: {
-			cislo = -1;
+			int volba;
+			cout << "Chcete ulozit evidenciu do suboru? \n";
+			cout << "1 - ano\n";
+			cout << "2 - nie\n";
+			cin >> volba;
+			if (volba == 1)
+			{
+				cout << "Ukladanie ";
+				firma->ulozEvidenciuDoSuboru();
+				cislo = -1;
+			}
+			else if (volba == 2) {
+				cout << "Neulozilo sa\n";
+				cislo = -1;
+			}
 		}; break;
-		default: cout << "Zadajte jednu z ponukanych moznosti" << endl;
+		default: cout << "Zadali ste zlu moznost, koniec programu" << endl;
+			cislo = -1;
 			break;
 		}
 	}
